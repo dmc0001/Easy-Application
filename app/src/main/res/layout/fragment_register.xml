@@ -56,15 +56,33 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fullNameContainer"
-
         >
-
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Email" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/etRoleLabel"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etEmailLabel">
+
+        <AutoCompleteTextView
+            android:id="@+id/etRole"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Register As... "
+            android:inputType="none"
+            android:focusable="false"
+            android:clickable="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <!-- <EditText
          android:id="@+id/etName"
@@ -78,11 +96,10 @@
         android:id="@+id/phoneNumberContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etEmailLabel">
+        app:layout_constraintTop_toBottomOf="@+id/etRoleLabel">
 
         <com.hbb20.CountryCodePicker
             android:id="@+id/ccp"

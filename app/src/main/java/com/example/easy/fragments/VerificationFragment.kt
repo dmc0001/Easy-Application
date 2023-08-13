@@ -8,14 +8,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
-import com.example.easy.R
 import com.example.easy.databinding.FragmentVerificationBinding
 import com.example.easy.utils.Resource
 import com.example.easy.viewmodels.AuthPhoneNumberViewModel
 import com.example.easy.viewmodels.RegisterViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class VerificationFragment : Fragment() {
@@ -36,7 +38,7 @@ class VerificationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Toast.makeText(requireContext(), args.userdata?.firstName ?: "hello", Toast.LENGTH_SHORT)
+        Toast.makeText(requireContext(), args.userdata?.role ?: "none", Toast.LENGTH_SHORT)
             .show()
         binding.apply {
             btnVerify.setOnClickListener {
@@ -47,60 +49,69 @@ class VerificationFragment : Fragment() {
                 }
             }
         }
-        lifecycleScope.launchWhenStarted {
-            viewModelPhoneAuth.isVerificationInProgress.collect { resource ->
-                when (resource) {
-                    is Resource.Loading -> {
-                        binding.btnVerify.startAnimation()
-                    }
-                    is Resource.Success -> {
-                        Log.d("VerificationOtpFragment", "Verification success: ${resource.data}")
-                        binding.btnVerify.revertAnimation()
-                        Toast.makeText(
-                            requireContext(),
-                            resource.message.toString(),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        viewModelRegister.createAccountWithEmailAndPassword(
-                            args.userdata!!,
-                            args.password!!
-                        )
-                        // Proceed to the next screen or perform necessary actions.
-                    }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModelPhoneAuth.isVerificationInProgress.collect { resource ->
+                    when (resource) {
+                        is Resource.Loading -> {
+                            binding.btnVerify.startAnimation()
+                        }
 
-                    is Resource.Failed -> {
-                        Log.d("VerificationOtpFragment", "Verification failed: ${resource.message}")
-                        binding.btnVerify.revertAnimation()
-                        // Show an error message to the user or take appropriate action.
-                    }
+                        is Resource.Success -> {
+                            Log.d(
+                                "VerificationOtpFragment",
+                                "Verification success: ${resource.data}"
+                            )
+                            binding.btnVerify.revertAnimation()
+                            Toast.makeText(
+                                requireContext(),
+                                resource.message.toString(),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            viewModelRegister.createAccountWithEmailAndPassword(
+                                args.userdata!!,
+                                args.password!!
+                            )
+                            // Proceed to the next screen or perform necessary actions.
+                        }
 
-                    else -> Unit
+                        is Resource.Failed -> {
+                            Log.d(
+                                "VerificationOtpFragment",
+                                "Verification failed: ${resource.message}"
+                            )
+                            binding.btnVerify.revertAnimation()
+                            // Show an error message to the user or take appropriate action.
+                        }
+
+                        else -> Unit
+                    }
                 }
             }
         }
-       /* lifecycleScope.launchWhenStarted {
-            viewModelRegister.register.collect {
-                when (it) {
-                    is Resource.Loading -> {
-                        binding.btnVerify.startAnimation()
-                    }
-                    is Resource.Success -> {
-                        Log.d("test", it.data.toString())
-                        binding.btnVerify.revertAnimation()
-                        Toast.makeText(
-                            requireContext(),
-                            it.message.toString(),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                    is Resource.Failed -> {
-                        Log.d("test", it.message.toString())
-                        binding.btnVerify.revertAnimation()
-                    }
-                    else -> Unit
-                }
-            }
-        }*/
+        /* lifecycleScope.launchWhenStarted {
+             viewModelRegister.register.collect {
+                 when (it) {
+                     is Resource.Loading -> {
+                         binding.btnVerify.startAnimation()
+                     }
+                     is Resource.Success -> {
+                         Log.d("test", it.data.toString())
+                         binding.btnVerify.revertAnimation()
+                         Toast.makeText(
+                             requireContext(),
+                             it.message.toString(),
+                             Toast.LENGTH_SHORT
+                         ).show()
+                     }
+                     is Resource.Failed -> {
+                         Log.d("test", it.message.toString())
+                         binding.btnVerify.revertAnimation()
+                     }
+                     else -> Unit
+                 }
+             }
+         }*/
     }
 }
 
