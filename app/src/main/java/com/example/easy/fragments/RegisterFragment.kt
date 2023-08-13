@@ -15,10 +15,13 @@ import androidx.navigation.Navigation
 import com.example.easy.R
 import com.example.easy.data.User
 import com.example.easy.databinding.FragmentRegisterBinding
+import com.example.easy.utils.RegisterValidation
 import com.example.easy.utils.Resource
 import com.example.easy.viewmodels.AuthPhoneNumberViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class RegisterFragment : Fragment() {
@@ -38,27 +41,7 @@ class RegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        /* binding.apply {
-             btnRegister.setOnClickListener {
-                 val firstName = etFirstName.text.toString().trim()
-                 val lastName = etLastName.text.toString().trim()
-                 val email = etEmail.text.toString().trim()
-                 //val role = etRole.text.toString().trim()
-                 val roleOptions = resources.getStringArray(R.array.role_options)
-                 val roleAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, roleOptions)
-                 etRole.setAdapter(roleAdapter)
-                 etRole.setOnItemClickListener { _, _, position, _ ->
-                     val selectedRole = roleAdapter.getItem(position)
-                     // Handle the selected role (Client or Employer) here
-                 }
-                 val cc = ccp.selectedCountryCodeWithPlus
-                 val number = etPhoneNumberRegister.text.toString().trim()
-                 val phoneNumber = "$cc$number"
-                 password = etPasswordRegister.text.toString()
-                 user = User(firstName, lastName, selectedRole, email, phoneNumber)
-                 viewModelPhoneAuth.sendVerificationCode(phoneNumber, requireActivity())
-             }
-         }*/
+
         binding.apply {
             val roleOptions = resources.getStringArray(R.array.role_options)
             val roleAdapter = ArrayAdapter(
@@ -78,7 +61,7 @@ class RegisterFragment : Fragment() {
                 val phoneNumber = "$cc$number"
                 password = etPasswordRegister.text.toString()
                 user = User(firstName, lastName, email, selectedRole, phoneNumber)
-                viewModelPhoneAuth.sendVerificationCode(phoneNumber, requireActivity())
+                viewModelPhoneAuth.sendVerificationCode(phoneNumber, requireActivity(),user,password)
             }
         }
 
@@ -130,51 +113,61 @@ class RegisterFragment : Fragment() {
             }
         }
 
-        /* lifecycleScope.launchWhenStarted {
-             viewModelRegister.validation.collect { validation ->
-                 if (validation.email is RegisterValidation.Failed) {
-                     withContext(Dispatchers.Main) {
-                         binding.etEmail.apply {
-                             requestFocus()
-                             error = validation.email.message
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModelPhoneAuth.validationRegister.collect { validation ->
+                    if (validation.email is RegisterValidation.Failed) {
+                        withContext(Dispatchers.Main) {
+                            binding.etEmail.apply {
+                                requestFocus()
+                                error = validation.email.message
 
-                         }
-                     }
-                 }
-                 if (validation.password is RegisterValidation.Failed) {
-                     withContext(Dispatchers.Main) {
-                         binding.etPasswordRegister.apply {
-                             requestFocus()
-                             error = validation.password.message
-                         }
-                     }
-                 }
-                 if (validation.firstname is RegisterValidation.Failed) {
-                     withContext(Dispatchers.Main) {
-                         binding.etFirstName.apply {
-                             requestFocus()
-                             error = validation.firstname.message
-                         }
-                     }
-                 }
-                 if (validation.lastname is RegisterValidation.Failed) {
-                     withContext(Dispatchers.Main) {
-                         binding.etLastName.apply {
-                             requestFocus()
-                             error = validation.lastname.message
-                         }
-                     }
-                 }
-                 if (validation.phoneNumber is RegisterValidation.Failed) {
-                     withContext(Dispatchers.Main) {
-                         binding.etPhoneNumberRegister.apply {
-                             requestFocus()
-                             error = validation.phoneNumber.message
-                         }
-                     }
-                 }
-             }
-         }*/
+                            }
+                        }
+                    }
+                    if (validation.password is RegisterValidation.Failed) {
+                        withContext(Dispatchers.Main) {
+                            binding.etPasswordRegister.apply {
+                                requestFocus()
+                                error = validation.password.message
+                            }
+                        }
+                    }
+                    if (validation.firstname is RegisterValidation.Failed) {
+                        withContext(Dispatchers.Main) {
+                            binding.etFirstName.apply {
+                                requestFocus()
+                                error = validation.firstname.message
+                            }
+                        }
+                    }
+                    if (validation.lastname is RegisterValidation.Failed) {
+                        withContext(Dispatchers.Main) {
+                            binding.etLastName.apply {
+                                requestFocus()
+                                error = validation.lastname.message
+                            }
+                        }
+                    }
+                    if (validation.phoneNumber is RegisterValidation.Failed) {
+                        withContext(Dispatchers.Main) {
+                            binding.etPhoneNumberRegister.apply {
+                                requestFocus()
+                                error = validation.phoneNumber.message
+                            }
+                        }
+                    }
+                    if (validation.role is RegisterValidation.Failed) {
+                        withContext(Dispatchers.Main) {
+                            binding.etRole.apply {
+                                requestFocus()
+                                error = validation.role.message
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }
