@@ -25,6 +25,11 @@ fun validFirstName(firstName: String): RegisterValidation {
         return RegisterValidation.Failed("First name cannot be an empty")
     return RegisterValidation.Success
 }
+fun validRole(role: String): RegisterValidation {
+    if (role.isEmpty())
+        return RegisterValidation.Failed("Role cannot be an empty")
+    return RegisterValidation.Success
+}
 
 fun validLastName(lastName: String): RegisterValidation {
     if (lastName.isEmpty())
