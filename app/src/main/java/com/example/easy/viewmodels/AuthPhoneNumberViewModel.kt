@@ -38,6 +38,9 @@ class AuthPhoneNumberViewModel @Inject constructor(private val auth: FirebaseAut
     val validation = _validation.receiveAsFlow()
 
     fun sendVerificationCode(phoneNumber: String, activity: Activity) {
+        runBlocking {
+            _isVerificationInProgress.emit(Resource.Loading())
+        }
         val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
             override fun onVerificationCompleted(credential: PhoneAuthCredential) {
@@ -102,7 +105,7 @@ class AuthPhoneNumberViewModel @Inject constructor(private val auth: FirebaseAut
                 _isVerificationInProgress.emit(Resource.Loading())
             }
             auth.signInWithCredential(credential)
-                .addOnCompleteListener() { task ->
+                .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(
