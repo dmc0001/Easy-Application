@@ -59,9 +59,18 @@ class RegisterFragment : Fragment() {
                 val cc = ccp.selectedCountryCodeWithPlus
                 val number = etPhoneNumberRegister.text.toString().trim()
                 val phoneNumber = "$cc$number"
-                password = etPasswordRegister.text.toString()
+                password = etPassword.text.toString()
                 user = User(firstName, lastName, email, selectedRole, phoneNumber)
-                viewModelPhoneAuth.sendVerificationCode(phoneNumber, requireActivity(),user,password)
+                viewModelPhoneAuth.sendVerificationCode(
+                    phoneNumber,
+                    requireActivity(),
+                    user,
+                    password
+                )
+            }
+            tvRegister.setOnClickListener {
+                Navigation.findNavController(view)
+                    .navigate(R.id.action_registerFragment_to_loginFragment)
             }
         }
 
@@ -103,6 +112,7 @@ class RegisterFragment : Fragment() {
                                 "SendOtpFragment",
                                 "Verification initiation failed: ${resource.message}"
                             )
+
                             binding.btnRegister.revertAnimation()
                             // Show an error message to the user or take appropriate action.
                         }
@@ -127,7 +137,7 @@ class RegisterFragment : Fragment() {
                     }
                     if (validation.password is RegisterValidation.Failed) {
                         withContext(Dispatchers.Main) {
-                            binding.etPasswordRegister.apply {
+                            binding.etPassword.apply {
                                 requestFocus()
                                 error = validation.password.message
                             }

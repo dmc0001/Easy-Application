@@ -14,7 +14,11 @@
         android:theme="@style/Theme.Easy"
         tools:targetApi="31">
         <activity
+            android:name=".activities.ClientActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.LoginRegisterActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
