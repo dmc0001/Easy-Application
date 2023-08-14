@@ -10,11 +10,11 @@ import com.example.easy.utils.RegisterFieldsState
 import com.example.easy.utils.RegisterValidation
 import com.example.easy.utils.Resource
 import com.example.easy.utils.VerificationOTPValidation
-import com.example.easy.utils.validEmail
+import com.example.easy.utils.validEmailRegister
 import com.example.easy.utils.validFirstName
 import com.example.easy.utils.validLastName
 import com.example.easy.utils.validOTP
-import com.example.easy.utils.validPassword
+import com.example.easy.utils.validPasswordRegister
 import com.example.easy.utils.validPhoneNumber
 import com.example.easy.utils.validRole
 import com.google.firebase.FirebaseException
@@ -113,8 +113,8 @@ class AuthPhoneNumberViewModel @Inject constructor(private val auth: FirebaseAut
         } else {
             val registerFieldsState =
                 RegisterFieldsState(
-                    validEmail(user.email),
-                    validPassword(password),
+                    validEmailRegister(user.email),
+                    validPasswordRegister(password),
                     validFirstName(user.firstName),
                     validLastName(user.lastName),
                     validPhoneNumber(user.phoneNumber),
@@ -128,8 +128,8 @@ class AuthPhoneNumberViewModel @Inject constructor(private val auth: FirebaseAut
     }
 
     private fun checkValidationRegister(user: User, password: String): Boolean {
-        val emailValidation = validEmail(user.email)
-        val passwordValidation = validPassword(password)
+        val emailValidation = validEmailRegister(user.email)
+        val passwordValidation = validPasswordRegister(password)
         val phoneNumberValidation = validPhoneNumber(user.phoneNumber)
         val firstnameValidation = validFirstName(user.firstName)
         val lastnameValidation = validLastName(user.lastName)

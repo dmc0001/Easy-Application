@@ -140,7 +140,7 @@
          app:layout_constraintTop_toBottomOf="@+id/etNameLabel"/>-->
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/etPasswordRegisterLabel"
+        android:id="@+id/etPasswordLabel"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -149,7 +149,7 @@
         app:layout_constraintTop_toBottomOf="@+id/phoneNumberContainer">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etPasswordRegister"
+            android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
@@ -168,9 +168,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Register"
+        android:backgroundTint="#6758a5"
+        android:textColor="@color/white"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etPasswordRegisterLabel"
+        app:layout_constraintTop_toBottomOf="@+id/etPasswordLabel"
         tools:layout_editor_absoluteX="32dp" />
 
     <TextView
