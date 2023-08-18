@@ -1,4 +1,4 @@
-package com.example.easy.fragments
+package com.example.easy.fragments.loginRegister
 
 import android.content.Intent
 import android.os.Bundle
@@ -103,12 +103,6 @@ class LoginFragment : Fragment() {
                         is Resource.Success -> {
                             Log.d("debugging", "Login has been success.")
                             binding.btnLogin.revertAnimation()
-                            Toast.makeText(
-                                requireContext(),
-                                resource.message,
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
                             Intent(requireContext(), ClientActivity::class.java).also {
                                 it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                                 startActivity(it)
@@ -121,7 +115,7 @@ class LoginFragment : Fragment() {
                                 "test",
                                 "Login has been failed: ${resource.message}"
                             )
-                            Toast.makeText(requireContext(),"Login has been failed: ${resource.message}",Toast.LENGTH_LONG)
+                            Snackbar.make(requireView(),"Login has been failed: ${resource.message}",Snackbar.LENGTH_LONG).show()
                             binding.btnLogin.revertAnimation()
                             // Show an error message to the user or take appropriate action.
                         }
