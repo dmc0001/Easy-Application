@@ -64,7 +64,7 @@ class LoginViewModel @Inject constructor(private var auth: FirebaseAuth) : ViewM
                     // If sign in fails, display a message to the user.
                     viewModelScope.launch {
 
-                        _login.emit(Resource.Failed("signInWithEmailAndPassword : failure"))
+                        _login.emit(Resource.Failed("${it.message}"))
                     }
                     // updateUI(null)
                 }
@@ -79,7 +79,8 @@ class LoginViewModel @Inject constructor(private var auth: FirebaseAuth) : ViewM
             }
         }
     }
-    fun resetPassword(email: String){
+
+    fun resetPassword(email: String) {
         viewModelScope.launch {
             _resetPassword.emit(Resource.Loading())
         }
@@ -87,7 +88,7 @@ class LoginViewModel @Inject constructor(private var auth: FirebaseAuth) : ViewM
             .sendPasswordResetEmail(email)
             .addOnSuccessListener {
                 viewModelScope.launch {
-                    _resetPassword.emit(Resource.Success(email,"Successfully rest password"))
+                    _resetPassword.emit(Resource.Success(email, "Successfully rest password"))
                 }
             }
             .addOnFailureListener {

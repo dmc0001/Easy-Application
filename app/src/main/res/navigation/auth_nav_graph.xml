@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.example.easy.fragments.RegisterFragment"
+        android:name="com.example.easy.fragments.loginRegister.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" >
         <action
@@ -20,7 +20,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.easy.fragments.LoginFragment"
+        android:name="com.example.easy.fragments.loginRegister.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/verificationFragment"
-        android:name="com.example.easy.fragments.VerificationFragment"
+        android:name="com.example.easy.fragments.loginRegister.VerificationFragment"
         android:label="fragment_verification"
         tools:layout="@layout/fragment_verification" >
         <argument
@@ -49,7 +49,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerOrLoginFragment"
-        android:name="com.example.easy.fragments.RegisterOrLoginFragment"
+        android:name="com.example.easy.fragments.loginRegister.RegisterOrLoginFragment"
         android:label="fragment_register_or_login"
         tools:layout="@layout/fragment_register_or_login" >
         <action

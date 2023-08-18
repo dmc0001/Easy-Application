@@ -1,4 +1,4 @@
-package com.example.easy.fragments
+package com.example.easy.fragments.loginRegister
 
 import android.os.Bundle
 import android.util.Log
