@@ -2,6 +2,7 @@ package com.example.easy.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.easy.utils.Constants.USER_COLLECTION
 import com.example.easy.utils.LoginFieldsState
 import com.example.easy.utils.RegisterValidation
 import com.example.easy.utils.Resource
@@ -11,6 +12,7 @@ import com.example.easy.utils.validPasswordLogin
 import com.example.easy.utils.validPasswordRegister
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -21,7 +23,10 @@ import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(private var auth: FirebaseAuth) : ViewModel() {
+class LoginViewModel @Inject constructor(
+    private var auth: FirebaseAuth,
+    private val db: FirebaseFirestore
+) : ViewModel() {
     private val _login = MutableSharedFlow<Resource<FirebaseUser>>()
     val login = _login.asSharedFlow()
 
@@ -30,6 +35,9 @@ class LoginViewModel @Inject constructor(private var auth: FirebaseAuth) : ViewM
 
     private val _validationLogin = Channel<LoginFieldsState>()
     val validationLogin = _validationLogin.receiveAsFlow()
+
+    private val _userRole = MutableSharedFlow<Resource<String>>()
+    val userRole = _userRole.asSharedFlow()
 
     fun loginWithEmailAndPassword(
         email: String,
@@ -95,6 +103,31 @@ class LoginViewModel @Inject constructor(private var auth: FirebaseAuth) : ViewM
                 viewModelScope.launch {
                     _resetPassword.emit(Resource.Failed(it.message.toString()))
                 }
+            }
+    }
+
+    // Function to fetch user data and determine user role
+    fun fetchUserRole(email: String) {
+        db.collection(USER_COLLECTION) // Replace with your user collection name
+            .whereEqualTo("email", email)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (!querySnapshot.isEmpty) {
+                    val userDocument = querySnapshot.documents[0]
+                    val role = userDocument.getString("role")
+                    role?.let {
+                        viewModelScope.launch {
+                            _userRole.emit(Resource.Success(it, "the role is : $it"))
+                        }
+                    } ?: run {
+                        viewModelScope.launch {
+                            _userRole.emit(Resource.Failed("User role not found"))
+                        }
+                    }
+                }
+            }
+            .addOnFailureListener {
+                _userRole.tryEmit(Resource.Failed(it.message.toString()))
             }
     }
 
