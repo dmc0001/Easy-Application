@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -15,6 +14,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.Navigation
 import com.example.easy.R
 import com.example.easy.activities.ClientActivity
+import com.example.easy.activities.EmployerActivity
 import com.example.easy.databinding.FragmentLoginBinding
 import com.example.easy.dialogs.setupBottomSheetDialog
 import com.example.easy.utils.LoginValidation
@@ -30,6 +30,7 @@ import kotlinx.coroutines.withContext
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
     private val viewModelLogin by viewModels<LoginViewModel>()
+    private lateinit var email: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,8 +45,9 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
             btnLogin.setOnClickListener {
-                val email = etEmail.text.toString().trim()
+                email = etEmail.text.toString().trim()
                 val password = etPassword.text.toString()
+                viewModelLogin.fetchUserRole(email)
                 viewModelLogin.loginWithEmailAndPassword(email, password)
 
             }
@@ -64,7 +66,6 @@ class LoginFragment : Fragment() {
                 viewModelLogin.resetPassword.collect { resource ->
                     when (resource) {
                         is Resource.Loading -> {
-
                         }
 
                         is Resource.Success -> {
@@ -103,11 +104,7 @@ class LoginFragment : Fragment() {
                         is Resource.Success -> {
                             Log.d("debugging", "Login has been success.")
                             binding.btnLogin.revertAnimation()
-                            Intent(requireContext(), ClientActivity::class.java).also {
-                                it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                                startActivity(it)
-                            }
-
+                            viewModelLogin.fetchUserRole(email)
                         }
 
                         is Resource.Failed -> {
@@ -115,7 +112,11 @@ class LoginFragment : Fragment() {
                                 "test",
                                 "Login has been failed: ${resource.message}"
                             )
-                            Snackbar.make(requireView(),"Login has been failed: ${resource.message}",Snackbar.LENGTH_LONG).show()
+                            Snackbar.make(
+                                requireView(),
+                                "Login has been failed: ${resource.message}",
+                                Snackbar.LENGTH_LONG
+                            ).show()
                             binding.btnLogin.revertAnimation()
                             // Show an error message to the user or take appropriate action.
                         }
@@ -148,5 +149,39 @@ class LoginFragment : Fragment() {
                 }
             }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModelLogin.userRole.collect { resource ->
+                    Log.d("Login",resource.message!!)
+                    when (resource) {
+                        is Resource.Success -> {
+                            val userRole = resource.data.toString()
+                            Log.d("Login",userRole)
+                            if (userRole == "Employer") {
+                                Intent(requireContext(), EmployerActivity::class.java).also {
+                                    it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    startActivity(it)
+                                }
+                            } else {
+                                Intent(requireContext(), ClientActivity::class.java).also {
+                                    it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    startActivity(it)
+                                }
+                            }
+
+                        }
+                        is Resource.Failed ->{
+
+                            Log.d(
+                                "test",
+                                "Login has been failed: ${resource.message}"
+                            )
+                        }
+                        else -> Unit
+                    }
+                }
+            }
+        }
+
     }
 }

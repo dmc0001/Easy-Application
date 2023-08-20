@@ -6,4 +6,17 @@
         <item>Client</item>
         <item>Employer</item>
     </string-array>
+
+    <string-array name="jobs_categories">
+        <item>Education</item>
+        <item>Law and government</item>
+        <item>Health care</item>
+        <item>Service industry </item>
+        <item>Transportation</item>
+        <item>Construction</item>
+        <item>Manufacturing</item>
+        <item>Business administration</item>
+        <item>Technology</item>
+    </string-array>
+
 </resources>

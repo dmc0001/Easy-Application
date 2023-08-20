@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import com.example.easy.activities.ClientActivity
+import com.example.easy.activities.EmployerActivity
 import com.example.easy.databinding.FragmentVerificationBinding
 import com.example.easy.utils.Resource
 import com.example.easy.utils.VerificationOTPValidation
@@ -77,11 +78,17 @@ class VerificationFragment : Fragment() {
                                 args.userdata!!,
                                 args.password!!
                             )
-                            Intent(requireContext(), ClientActivity::class.java).also {
-                                it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                                startActivity(it)
+                            if(args.userdata!!.role == "Employer"){
+                                Intent(requireContext(), EmployerActivity::class.java).also {
+                                    it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    startActivity(it)
+                                }
+                            }else{
+                                Intent(requireContext(), ClientActivity::class.java).also {
+                                    it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    startActivity(it)
+                                }
                             }
-                            // Proceed to the next screen or perform necessary actions.
                         }
 
                         is Resource.Failed -> {

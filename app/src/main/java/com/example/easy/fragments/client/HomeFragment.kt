@@ -8,11 +8,11 @@ import androidx.fragment.app.Fragment
 import com.example.easy.R
 import com.example.easy.adapters.HomeViewpagerAdapter
 import com.example.easy.databinding.FragmentHomeBinding
-import com.example.easy.fragments.categories.CatFourFragment
-import com.example.easy.fragments.categories.CatOneFragment
-import com.example.easy.fragments.categories.CatThreeFragment
-import com.example.easy.fragments.categories.CatTwoFragment
-import com.example.easy.fragments.categories.MainCategoryFragment
+import com.example.easy.fragments.client.categories.CatFourFragment
+import com.example.easy.fragments.client.categories.CatOneFragment
+import com.example.easy.fragments.client.categories.CatThreeFragment
+import com.example.easy.fragments.client.categories.CatTwoFragment
+import com.example.easy.fragments.client.categories.MainCategoryFragment
 import com.example.easy.utils.Resource
 import com.google.android.material.tabs.TabLayoutMediator
 
