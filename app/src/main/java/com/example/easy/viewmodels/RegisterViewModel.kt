@@ -7,6 +7,7 @@ import com.example.easy.utils.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
@@ -17,7 +18,7 @@ class RegisterViewModel @Inject constructor(
 ) :
     ViewModel() {
     private val _register = MutableStateFlow<Resource<User>>(Resource.Unspecified())
-    //val register: Flow<Resource<User>> = _register
+   // val register: Flow<Resource<User>> = _register
 
 
     fun createAccountWithEmailAndPassword(

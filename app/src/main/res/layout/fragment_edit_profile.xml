@@ -93,7 +93,7 @@
 
 
         <EditText
-            android:id="@+id/edit_project_description"
+            android:id="@+id/ed_description"
             android:layout_width="0dp"
             android:layout_height="150dp"
             android:layout_margin="16dp"
@@ -116,7 +116,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_project_description" />
+            app:layout_constraintTop_toBottomOf="@id/ed_description" />
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chip_group_skills"
@@ -174,7 +174,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="Upload your resume"
+            android:text="Upload your resume (Only PDF)"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -182,7 +182,7 @@
             app:layout_constraintTop_toBottomOf="@id/layout_add_skill" />
 
         <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
-            android:id="@+id/btnUploadImage"
+            android:id="@+id/btnUploadResume"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
@@ -193,6 +193,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_resume" />
+        <TextView
+            android:id="@+id/textViewResumeFileName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/btnUploadResume"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"/>
 
         <TextView
             android:id="@+id/tv_image"
@@ -204,7 +214,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btnUploadImage" />
+            app:layout_constraintTop_toBottomOf="@id/textViewResumeFileName" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/imageContainer"
