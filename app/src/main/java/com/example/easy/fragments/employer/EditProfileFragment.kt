@@ -45,6 +45,9 @@ class EditProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
+
         val selectedSkills: MutableList<String> = mutableListOf()
 
         binding.apply {
@@ -97,9 +100,10 @@ class EditProfileFragment : Fragment() {
                 val jobCategory = edCategory.text.toString()
                 val jobDescription = edDescription.text.toString()
                 val price = edCompensation.text.toString()
-                //  selectedImages.addAll(selectedImageUris.map { it.toString() })
+
                 val jobInformation = JobInformation(
                      // Assign appropriate ID
+                    uid = "",
                     jobTitle = jobTitle,
                     jobCategory = jobCategory,
                     jobDescription = jobDescription,

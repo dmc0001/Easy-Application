@@ -34,7 +34,7 @@ class EditProfileViewModel @Inject constructor(
         val uid = firebaseAuth.currentUser?.uid
         if (uid != null) {
             val data = hashMapOf(
-                "uid" to uid,
+                "uid" to firebaseAuth.currentUser?.uid,
                 "jobTitle" to information.jobTitle,
                 "jobCategory" to information.jobCategory,
                 "jobDescription" to information.jobDescription,
@@ -104,6 +104,5 @@ class EditProfileViewModel @Inject constructor(
 
 
 }
-
 
 

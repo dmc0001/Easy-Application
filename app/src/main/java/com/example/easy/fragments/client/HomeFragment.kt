@@ -5,18 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.easy.R
 import com.example.easy.adapters.HomeViewpagerAdapter
 import com.example.easy.databinding.FragmentHomeBinding
-import com.example.easy.fragments.client.categories.CatFourFragment
-import com.example.easy.fragments.client.categories.CatOneFragment
-import com.example.easy.fragments.client.categories.CatThreeFragment
-import com.example.easy.fragments.client.categories.CatTwoFragment
+import com.example.easy.fragments.client.categories.BusinessAdministrationFragment
+import com.example.easy.fragments.client.categories.ConstructionFragment
+import com.example.easy.fragments.client.categories.ServiceIndustryFragment
+import com.example.easy.fragments.client.categories.EducationFragment
+import com.example.easy.fragments.client.categories.HealthCareFragment
+import com.example.easy.fragments.client.categories.LawAndGovernmentFragment
 import com.example.easy.fragments.client.categories.MainCategoryFragment
-import com.example.easy.utils.Resource
+import com.example.easy.fragments.client.categories.ManufacturingFragment
+import com.example.easy.fragments.client.categories.TechnologyFragment
+import com.example.easy.fragments.client.categories.TransportationFragment
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
 
@@ -34,10 +38,15 @@ class HomeFragment : Fragment() {
         val categoriesFragments =
             arrayListOf(
                 MainCategoryFragment(),
-                CatOneFragment(),
-                CatTwoFragment(),
-                CatThreeFragment(),
-                CatFourFragment()
+                EducationFragment(),
+                LawAndGovernmentFragment(),
+                HealthCareFragment(),
+                ServiceIndustryFragment(),
+                TransportationFragment(),
+                ConstructionFragment(),
+                ManufacturingFragment(),
+                BusinessAdministrationFragment(),
+                TechnologyFragment()
             )
         val viewPagerAdapter =
             HomeViewpagerAdapter(categoriesFragments, childFragmentManager, lifecycle)
@@ -47,11 +56,15 @@ class HomeFragment : Fragment() {
             TabLayoutMediator(tabLayout, viewPagerHome) { tab, position ->
                 when (position) {
                     0 -> tab.text = "Home"
-                    1 -> tab.text = "Tab 2"
-                    2 -> tab.text = "Tab 3"
-                    3 -> tab.text = "Tab 4"
-                    4 -> tab.text = "Tab 5"
-                    5 -> tab.text = "Tab 6"
+                    1 -> tab.text = "Education"
+                    2 -> tab.text = "Law and Government"
+                    3 -> tab.text = "Health care"
+                    4 -> tab.text = "Service industry"
+                    5 -> tab.text = "Transportation"
+                    6 -> tab.text = "Construction"
+                    7 -> tab.text = "Manufacturing"
+                    8 -> tab.text = "Business administration"
+                    9 -> tab.text = "Technology"
                 }
 
             }.attach()
