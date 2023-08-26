@@ -6,6 +6,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.easy.R
 import com.example.easy.databinding.ActivityClientBinding
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
 
 class ClientActivity : AppCompatActivity() {
     private val binding by lazy {
