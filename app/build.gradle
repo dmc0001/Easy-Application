@@ -87,5 +87,13 @@ dependencies {
     //circular image
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
+    //viewpager2 indicator
+    implementation("com.tbuonomo:dotsindicator:5.0")
+
+
+
+
+
+
 
 }

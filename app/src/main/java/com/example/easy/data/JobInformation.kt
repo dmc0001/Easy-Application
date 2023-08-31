@@ -1,5 +1,9 @@
 package com.example.easy.data
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class JobInformation(
     val uid :String?,
     val jobTitle: String,
@@ -9,6 +13,6 @@ data class JobInformation(
     val jobImages: List<String>?,
     val resumeEmployer:String?,
     val price:String?,
-){
+):Parcelable{
     constructor() : this("","","","", emptyList(), emptyList(),"","")
 }

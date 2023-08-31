@@ -17,6 +17,7 @@ import com.example.easy.fragments.client.categories.MainCategoryFragment
 import com.example.easy.fragments.client.categories.ManufacturingFragment
 import com.example.easy.fragments.client.categories.TechnologyFragment
 import com.example.easy.fragments.client.categories.TransportationFragment
+import com.example.easy.utils.showBottomNav
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -70,6 +71,11 @@ class HomeFragment : Fragment() {
             }.attach()
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        showBottomNav()
     }
 
 }
