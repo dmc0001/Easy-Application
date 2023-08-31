@@ -11,7 +11,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.easy.R
 import com.example.easy.adapters.JobsInfoAdapter
 import com.example.easy.databinding.FragmentMainCategoryBinding
 import com.example.easy.utils.Resource
@@ -39,6 +41,12 @@ class MainCategoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupJobsInfoAdapter()
+
+        jobsInfoAdapter.onClick = {
+            val b = Bundle().apply { putParcelable("jobInfo",it) }
+            findNavController().navigate(R.id.action_homeFragment_to_detailsJobInfoFragment2,b)
+        }
+
 
 
         viewLifecycleOwner.lifecycleScope.launch {

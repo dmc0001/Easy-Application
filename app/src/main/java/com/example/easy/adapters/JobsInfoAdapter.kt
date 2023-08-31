@@ -23,7 +23,7 @@ class JobsInfoAdapter : RecyclerView.Adapter<JobsInfoAdapter.SpecialViewHolder>(
                     .into(jobImageItem)
                 tvJobTitle.text = jobInformation.jobTitle
                 tvJobPrice.text = jobInformation.price
-                Log.d("debugging","Set data : ${jobInformation.jobImages?.get(0)}")
+                Log.d("debugging", "Set data : ${jobInformation.jobImages?.get(0)}")
             }
         }
     }
@@ -50,9 +50,14 @@ class JobsInfoAdapter : RecyclerView.Adapter<JobsInfoAdapter.SpecialViewHolder>(
     override fun onBindViewHolder(holder: SpecialViewHolder, position: Int) {
         val job = differ.currentList[position]
         holder.bind(jobInformation = job)
+        holder.itemView.setOnClickListener {
+            onClick?.invoke(job)
+        }
     }
 
     override fun getItemCount(): Int {
         return differ.currentList.size
     }
+
+    var onClick: ((JobInformation) -> Unit)? = null
 }
