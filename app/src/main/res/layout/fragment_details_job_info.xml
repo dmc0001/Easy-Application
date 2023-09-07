@@ -161,20 +161,74 @@
             </com.google.android.material.chip.ChipGroup>
 
 
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/linear_employer_data"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/linear_job_description"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tvEmployerInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Employer Informations"
+                android:textSize="24sp"
+                android:layout_marginTop="16dp"
+                android:textStyle="bold"/>
+
+            <!-- Profile Picture -->
+
+            <!-- User Information -->
+            <TextView
+                android:id="@+id/tvFullName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User's Name"
+                android:textSize="24sp"
+                android:layout_marginTop="16dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tvEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="User's Email"/>
+
+            <TextView
+                android:id="@+id/tvPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="User's Phone Number"/>
+
+            <!-- Role (If applicable) -->
+            <TextView
+                android:id="@+id/tvAdress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Adress"/>
+
+            <!-- Edit Profile Button -->
             <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
                 android:id="@+id/btn_apply"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-
                 android:background="@drawable/button"
                 android:text="Order"
                 android:textAllCaps="false"
+                android:layout_marginTop="32dp"
                 android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ed_compensation" />
+                />
+
         </LinearLayout>
+
 
         <ProgressBar
             android:id="@+id/progressbar"
@@ -188,6 +242,8 @@
             android:layout_marginTop="45dp"
             android:visibility="invisible"
             />
+
+
 
 
 

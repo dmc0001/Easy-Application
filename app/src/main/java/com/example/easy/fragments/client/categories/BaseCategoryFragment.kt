@@ -6,7 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.easy.R
 import com.example.easy.adapters.JobsInfoAdapter
 import com.example.easy.databinding.FragmentBaseCategoryBinding
 
@@ -27,6 +30,11 @@ open class BaseCategoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupJobsInfoAdapter()
+
+        jobsInfoAdapter.onClick = {
+            val b = Bundle().apply { putParcelable("jobInfo",it) }
+            findNavController().navigate(R.id.action_homeFragment_to_detailsJobInfoFragment2,b)
+        }
 
         binding.nestedScrollMainCategory.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _ ->
             if (v.getChildAt(0).bottom <= v.height + scrollY) {
@@ -51,8 +59,7 @@ open class BaseCategoryFragment : Fragment() {
 
     private fun setupJobsInfoAdapter() {
         binding.rvJobsInfo.apply {
-            layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = jobsInfoAdapter
         }
     }

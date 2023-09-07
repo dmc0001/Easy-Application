@@ -3,6 +3,7 @@ package com.example.easy.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.easy.data.JobInformation
+import com.example.easy.data.User
 import com.example.easy.utils.Constants.JOB_INFO_COLLECTION
 import com.example.easy.utils.Resource
 import com.google.firebase.firestore.FirebaseFirestore
@@ -16,25 +17,25 @@ import javax.inject.Inject
 @HiltViewModel
 class MainCategoryViewModel @Inject constructor(
     private val db: FirebaseFirestore
-    //,
-    //private val storage: FirebaseStorage,
-    //private val auth: FirebaseAuth
 ) : ViewModel() {
     private val _specialJobs =
         MutableStateFlow<Resource<List<JobInformation>>>(Resource.Unspecified())
     val specialJobs: StateFlow<Resource<List<JobInformation>>> = _specialJobs
 
-    /* private val _jobs =
-         MutableStateFlow<Resource<List<HashMap<Any, Any>>>>(Resource.Unspecified())
-     val jobs: StateFlow<Resource<List<HashMap<Any, Any>>>> = _jobs*/
+    /*  private val _employerInfo =
+          MutableStateFlow<Resource<List<User>>>(Resource.Unspecified())
+      val employerInfo: StateFlow<Resource<List<User>>> = _employerInfo*/
+
 
     private val pageInfo = PagingInfo()
+    //private val pageInfoTwo = PagingInfoTwo()
 
     init {
-        fetchSpecialJobs()
+        fetchJobsInfo()
+        //fetchEmployerInfo()
     }
 
-    fun fetchSpecialJobs() {
+    fun fetchJobsInfo() {
         runBlocking {
             _specialJobs.emit(Resource.Loading())
         }
@@ -57,57 +58,48 @@ class MainCategoryViewModel @Inject constructor(
             }
     }
 
-    /* private fun getJobs() {
+    /* fun fetchEmployerInfo() {
          runBlocking {
-             _jobs.emit(Resource.Loading())
+             _employerInfo.emit(Resource.Loading())
          }
-         val userRef = db.collection(JOB_INFO_COLLECTION).document(auth.currentUser?.uid!!)
-         userRef.addSnapshotListener { snapshot, e ->
-
-             if (e != null) {
+         db.collection(USER_COLLECTION)
+             .limit(pageInfo.jobInfoPage * 10)
+             .get()
+             .addOnSuccessListener { result ->
+                 val employerInfo = result.toObjects(User::class.java)
+                 pageInfoTwo.isPagingEnd = employerInfo == pageInfo.oldJobsInfo
+                 pageInfoTwo.oldEmployerInfo = employerInfo
                  viewModelScope.launch {
-                     _specialJobs.emit(Resource.Failed("Get data jobs failure : $e"))
-                 }
 
-             }
-
-             if (snapshot != null) {
-                 if (snapshot.exists()) {
-
-                     val data = hashMapOf(
-                         "jobTitle" to snapshot.getString("jobTitle"),
-                         "jobCategory" to snapshot.getString("jobCategory"),
-                         "jobDescription" to snapshot.getString("jobDescription"),
-                         "jobSkills" to snapshot.getString("jobSkills"),
-                         "jobImages" to snapshot.getString("jobImages"),
-                         "resumeEmployer" to snapshot.getString("resumeEmployer"),
-                         "price" to snapshot.getString("price")
+                     _employerInfo.emit(
+                         Resource.Success(
+                             employerInfo,
+                             "Get employer info successfully"
+                         )
                      )
-
                  }
-
+                 pageInfo.jobInfoPage++
+             }.addOnFailureListener {
+                 viewModelScope.launch {
+                     _employerInfo.emit(Resource.Failed("Get data jobs failure"))
+                 }
              }
-
-         }
-
      }*/
 
-    /* private suspend fun getImagesForJob(job: JobInformation): String? {
-         val jobImagesReference = storage.reference.child("Job Employer/${auth.currentUser?.uid}/${job.uid}/")
 
-         val items = jobImagesReference.listAll().await()
-
-         // Get the first item (image) if available
-         val firstImageItem = items.items.firstOrNull()
-
-         // Retrieve and return the download URL of the first image
-         return firstImageItem?.downloadUrl?.await()?.toString()
-     }
- */
     internal data class PagingInfo(
         var jobInfoPage: Long = 1,
         var oldJobsInfo: List<JobInformation> = emptyList(),
         var isPagingEnd: Boolean = false
 
     )
+
+    internal data class PagingInfoTwo(
+        var jobEmployerPage: Long = 1,
+        var oldEmployerInfo: List<User> = emptyList(),
+        var isPagingEnd: Boolean = false
+
+    )
+
+
 }

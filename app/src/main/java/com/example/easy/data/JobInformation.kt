@@ -11,7 +11,7 @@ data class JobInformation(
     val jobDescription: String,
     val jobSkills: List<String>?,
     val jobImages: List<String>?,
-    val resumeEmployer:String?,
+    val location:String,
     val price:String?,
 ):Parcelable{
     constructor() : this("","","","", emptyList(), emptyList(),"","")

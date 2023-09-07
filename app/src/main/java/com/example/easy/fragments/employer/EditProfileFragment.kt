@@ -1,5 +1,9 @@
 package com.example.easy.fragments.employer
 
+import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.content.Intent.ACTION_GET_CONTENT
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -29,7 +33,6 @@ class EditProfileFragment : Fragment() {
 
 
     private val selectedImageUris = mutableListOf<Uri>()
-    private var selectedResumeUri: Uri? = null
 
     private lateinit var binding: FragmentEditProfileBinding
 
@@ -46,8 +49,6 @@ class EditProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-
-
         val selectedSkills: MutableList<String> = mutableListOf()
 
         binding.apply {
@@ -60,6 +61,14 @@ class EditProfileFragment : Fragment() {
                 categoryOptions
             )
             edCategory.setAdapter(categoryAdapter)
+            
+            val locationOptions = resources.getStringArray(R.array.jobs_loacations)
+            val locationAdapter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                locationOptions
+            )
+            edLocation.setAdapter(locationAdapter)
 
             val chipGroupSkills = chipGroupSkills
             val layoutAddSkill = layoutAddSkill
@@ -89,46 +98,75 @@ class EditProfileFragment : Fragment() {
                 }
                 layoutAddSkill.visibility = View.GONE
             }
-            btnUploadResume.setOnClickListener {
-                openFilePicker()
-            }
-            imageView.setOnClickListener {
+
+            /*btnImagePicker.setOnClickListener {
                 openImagePicker()
+            }*/
+            val selectImageActivityResult =
+                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                    if (result.resultCode == RESULT_OK) {
+                        val intent = result.data
+
+                        //Multiple images selected
+                        if (intent?.clipData != null) {
+                            val count = intent.clipData?.itemCount ?: 0
+                            (0 until count).forEach { it ->
+                                val imageUri = intent.clipData?.getItemAt(it)?.uri
+                                imageUri?.let {
+                                    selectedImageUris.add(it)
+                                }
+                            }
+                        } else {
+                            val imageUri = intent?.data
+                            imageUri?.let {
+                                selectedImageUris.add(it)
+                            }
+                        }
+                        updateImages()
+                    }
+                }
+            btnImagePicker.setOnClickListener {
+                Intent(ACTION_GET_CONTENT).also {
+                    it.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                    it.type = "image/*"
+                    selectImageActivityResult.launch(it)
+                }
+
             }
             btnApply.setOnClickListener {
                 val jobTitle = edJobTitle.text.toString()
                 val jobCategory = edCategory.text.toString()
                 val jobDescription = edDescription.text.toString()
+                val jobLocation = edLocation.text.toString()
                 val price = edCompensation.text.toString()
 
                 val jobInformation = JobInformation(
-                     // Assign appropriate ID
-                    uid = "",
-                    jobTitle = jobTitle,
-                    jobCategory = jobCategory,
-                    jobDescription = jobDescription,
-                    jobSkills = selectedSkills,
-                    jobImages = selectedImageUris.map { it.toString() },
-                    resumeEmployer = selectedResumeUri?.toString()
-                        ?: "", // Handle resume information if needed
-                    price = price
+                    "",
+                    jobTitle,
+                    jobCategory,
+                    jobDescription,
+                    selectedSkills,
+                    selectedImageUris.map { it.toString() },
+                    jobLocation,
+                    price
                 )
                 editProfileViewModel.saveJobInfo(jobInformation)
 
 
                 val snackBarMessage =
-                            "Job Title: ${jobInformation.jobTitle}\n" +
+                    "Job Title: ${jobInformation.jobTitle}\n" +
                             "Job Category: ${jobInformation.jobCategory}\n" +
                             "Job Description: ${jobInformation.jobDescription}\n" +
                             "Job Skills: ${jobInformation.jobSkills?.joinToString(", ")}\n" +
-                            "Resume Employer: ${jobInformation.resumeEmployer}\n" +
+                            "Resume Employer: ${jobInformation.location}\n" +
                             "Job Images: ${jobInformation.jobImages?.joinToString(", ")}\n" +
                             "Price: ${jobInformation.price}"
 
-                Log.d("debugging",snackBarMessage)
+                Log.d("debugging", snackBarMessage)
 
             }
         }
+
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -141,14 +179,14 @@ class EditProfileFragment : Fragment() {
 
                         is Resource.Success -> {
                             binding.btnApply.revertAnimation()
-                            Log.d("debugging", "${ resource.message }")
-                            Snackbar.make(view,"${ resource.message }",Snackbar.LENGTH_LONG).show()
+                            Log.d("debugging", "${resource.message}")
+                            Snackbar.make(view, "${resource.message}", Snackbar.LENGTH_LONG).show()
                         }
 
                         is Resource.Failed -> {
                             binding.btnApply.revertAnimation()
-                            Log.d("debugging", "${ resource.message }")
-                            Snackbar.make(view,"${ resource.message }",Snackbar.LENGTH_LONG).show()
+                            Log.d("debugging", "${resource.message}")
+                            Snackbar.make(view, "${resource.message}", Snackbar.LENGTH_LONG).show()
                         }
 
                         else -> Unit
@@ -157,35 +195,11 @@ class EditProfileFragment : Fragment() {
             }
         }
     }
-
-    private fun openImagePicker() {
-        val mimeTypes = arrayOf("image/*")
-        imagePickerLauncher.launch(mimeTypes)
+    @SuppressLint("SetTextI18n")
+    private fun updateImages() {
+        binding.tvCountImage.text = "You upload ${selectedImageUris.size} images"
+        binding.tvCountImage.visibility = View.VISIBLE
     }
-
-    private val imagePickerLauncher =
-        registerForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris: List<Uri>? ->
-            if (uris != null) {
-                selectedImageUris.addAll(uris) // Add the URIs to the list
-                // Now the selectedImageUris list contains all the selected image URIs
-            }
-        }
-
-    private fun openFilePicker() {
-        val resumeType = "application/pdf"
-        filePickerLauncher.launch(resumeType)
-    }
-
-    private val filePickerLauncher =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            if (uri != null) {
-                selectedResumeUri = uri
-                val fileName = uri.lastPathSegment
-                binding.textViewResumeFileName.text = fileName
-                binding.textViewResumeFileName.visibility = View.VISIBLE
-            }
-        }
-
 
 }
 
