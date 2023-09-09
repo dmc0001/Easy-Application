@@ -175,32 +175,44 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="Upload your resume (Only PDF)"
+            android:text="Your Located in "
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layout_add_skill" />
-
-        <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
-            android:id="@+id/btnUploadResume"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ed_LocationLabel"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_margin="16dp"
-            android:background="@drawable/white_button"
-            android:text="Upload"
-            android:textAllCaps="false"
-            android:textColor="#6758a5"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_resume" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_resume">
+
+            <AutoCompleteTextView
+                android:id="@+id/ed_Location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bottom_nav_background"
+                android:clickable="true"
+                android:focusable="false"
+                android:hint="Location"
+                android:inputType="none"
+                android:paddingStart="32dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="32dp"
+                android:paddingBottom="16dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
         <TextView
             android:id="@+id/textViewResumeFileName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/btnUploadResume"
+            app:layout_constraintTop_toBottomOf="@id/ed_LocationLabel"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="16dp"/>
@@ -217,27 +229,29 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textViewResumeFileName" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/imageContainer"
-            android:layout_width="0dp"
-            android:layout_height="250dp"
+        <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
+            android:id="@+id/btnImagePicker"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_margin="16dp"
-            android:background="@drawable/bottom_nav_background"
+            android:textColor="#6758a5"
+            android:text="Upload"
+            android:textAllCaps="false"
+            android:background="@drawable/white_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_image">
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_add_image"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toBottomOf="@id/tv_image"
+       />
+        <TextView
+            android:id="@+id/tv_countImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/btnImagePicker"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"/>
 
         <TextView
             android:id="@+id/text_compensation"
@@ -249,7 +263,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/imageContainer" />
+            app:layout_constraintTop_toBottomOf="@id/tv_countImage" />
 
         <EditText
             android:id="@+id/ed_compensation"
@@ -258,6 +272,7 @@
             android:layout_margin="16dp"
             android:background="@drawable/bottom_nav_background"
             android:hint="Price"
+            android:inputType="number"
             android:paddingStart="32dp"
             android:paddingTop="16dp"
             android:paddingEnd="32dp"

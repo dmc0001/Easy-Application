@@ -7,7 +7,7 @@ import com.example.easy.R
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
-fun Fragment.setupBottomSheetDialog(
+fun Fragment.setupBottomSheetForgetPasswordDialog(
     onSendClick: (String) -> Unit
 ) {
 

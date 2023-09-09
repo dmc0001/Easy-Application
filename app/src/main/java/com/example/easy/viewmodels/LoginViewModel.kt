@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.easy.utils.Constants.USER_COLLECTION
 import com.example.easy.utils.LoginFieldsState
+import com.example.easy.utils.LoginValidation
 import com.example.easy.utils.RegisterValidation
 import com.example.easy.utils.Resource
 import com.example.easy.utils.validEmailLogin
@@ -132,10 +133,13 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun checkValidationLogin(email: String, password: String): Boolean {
-        val emailValidation = validEmailRegister(email)
-        val passwordValidation = validPasswordRegister(password)
+        val emailValidation = validEmailLogin(email)
+        val passwordValidation = validPasswordLogin(password)
 
-        return (emailValidation is RegisterValidation.Success
-                && passwordValidation is RegisterValidation.Success)
+        // Check if both email and password are valid and not empty
+        return (emailValidation is LoginValidation.Success
+                && passwordValidation is LoginValidation.Success
+                && password.isNotBlank()) // Ensure password is not empty
     }
+
 }

@@ -16,7 +16,7 @@ import com.example.easy.R
 import com.example.easy.activities.ClientActivity
 import com.example.easy.activities.EmployerActivity
 import com.example.easy.databinding.FragmentLoginBinding
-import com.example.easy.dialogs.setupBottomSheetDialog
+import com.example.easy.dialogs.setupBottomSheetForgetPasswordDialog
 import com.example.easy.utils.LoginValidation
 import com.example.easy.utils.Resource
 import com.example.easy.viewmodels.LoginViewModel
@@ -47,7 +47,7 @@ class LoginFragment : Fragment() {
             btnLogin.setOnClickListener {
                 email = etEmail.text.toString().trim()
                 val password = etPassword.text.toString()
-                viewModelLogin.fetchUserRole(email)
+
                 viewModelLogin.loginWithEmailAndPassword(email, password)
 
             }
@@ -56,7 +56,7 @@ class LoginFragment : Fragment() {
                     .navigate(R.id.action_loginFragment_to_registerFragment)
             }
             tvForgetPassword.setOnClickListener {
-                setupBottomSheetDialog { email ->
+                setupBottomSheetForgetPasswordDialog { email ->
                     viewModelLogin.resetPassword(email)
                 }
             }

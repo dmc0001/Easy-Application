@@ -12,7 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.easy.R
 import com.example.easy.adapters.JobsInfoAdapter
 import com.example.easy.databinding.FragmentMainCategoryBinding
@@ -43,8 +43,11 @@ class MainCategoryFragment : Fragment() {
         setupJobsInfoAdapter()
 
         jobsInfoAdapter.onClick = {
-            val b = Bundle().apply { putParcelable("jobInfo",it) }
-            findNavController().navigate(R.id.action_homeFragment_to_detailsJobInfoFragment2,b)
+            val b = Bundle().apply { putParcelable("jobInfo", it)
+                putParcelable("user", it)
+
+            }
+            findNavController().navigate(R.id.action_homeFragment_to_detailsJobInfoFragment2, b)
         }
 
 
@@ -75,8 +78,8 @@ class MainCategoryFragment : Fragment() {
             }
         }
         binding.nestedScrollMainCategory.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _ ->
-            if (v.getChildAt(0).bottom <= v.height + scrollY){
-                mainCategoryViewModel.fetchSpecialJobs()
+            if (v.getChildAt(0).bottom <= v.height + scrollY) {
+                mainCategoryViewModel.fetchJobsInfo()
             }
         })
 
@@ -94,10 +97,8 @@ class MainCategoryFragment : Fragment() {
     private fun setupJobsInfoAdapter() {
         jobsInfoAdapter = JobsInfoAdapter()
         binding.rvJobsInfo.apply {
-            layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = jobsInfoAdapter
         }
     }
-
 }

@@ -1,7 +1,6 @@
 package com.example.easy.adapters
 
 import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -9,21 +8,23 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.easy.data.JobInformation
-import com.example.easy.databinding.JobInformationItemBinding
+import com.example.easy.databinding.ProductItemBinding
 
 class JobsInfoAdapter : RecyclerView.Adapter<JobsInfoAdapter.SpecialViewHolder>() {
-    inner class SpecialViewHolder(private val binding: JobInformationItemBinding) :
+    inner class SpecialViewHolder(private val binding: ProductItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         fun bind(jobInformation: JobInformation) {
             binding.apply {
                 val imageUrl = jobInformation.jobImages?.get(0)
                 val imageUri = imageUrl?.let { Uri.parse(it) }
                 Glide.with(itemView)
                     .load(imageUri)
-                    .into(jobImageItem)
+                    .into(imgProduct)
                 tvJobTitle.text = jobInformation.jobTitle
                 tvJobPrice.text = jobInformation.price
-                Log.d("debugging", "Set data : ${jobInformation.jobImages?.get(0)}")
+                tvJobLocation.text = jobInformation.location
+
             }
         }
     }
@@ -41,7 +42,7 @@ class JobsInfoAdapter : RecyclerView.Adapter<JobsInfoAdapter.SpecialViewHolder>(
     val differ = AsyncListDiffer(this, diffCallback)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SpecialViewHolder {
         return SpecialViewHolder(
-            JobInformationItemBinding.inflate(
+            ProductItemBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )
