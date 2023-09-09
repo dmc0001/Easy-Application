@@ -15,11 +15,11 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/viewpager_card"
             android:layout_width="0dp"
-            android:layout_height="350dp"
-            android:layout_marginTop="20dp"
-            app:cardCornerRadius="15dp"
-            app:layout_constraintEnd_toEndOf="@id/guideline2"
-            app:layout_constraintStart_toStartOf="@id/guideline1"
+            android:layout_height="450dp"
+
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:orientation="vertical"
             android:backgroundTint="@color/white"
@@ -33,12 +33,13 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_easy" />
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/img_close"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/tab_selected_background"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:src="@drawable/ic_close"
                 app:tint="@color/black"
                 android:scaleType="centerInside" />
@@ -52,9 +53,10 @@
             android:layout_height="wrap_content"
             app:dotsColor="@color/second_white"
             app:dotsCornerRadius="8dp"
-            app:dotsSize="12dp"
+            app:dotsSize="8dp"
             app:dotsSpacing="3dp"
             app:dotsWidthFactor="2"
+            android:layout_marginTop="5dp"
             app:selectedDotColor="@color/black"
             app:progressMode="true"
             app:layout_constraintTop_toBottomOf="@id/viewpager_card"
@@ -215,20 +217,22 @@
                 android:text="Adress"/>
 
             <!-- Edit Profile Button -->
-            <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
-                android:id="@+id/btn_apply"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:background="@drawable/button"
-                android:text="Order"
-                android:textAllCaps="false"
-                android:layout_marginTop="32dp"
-                android:textColor="@color/white"
-                />
+
 
         </LinearLayout>
-
+        <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
+            android:id="@+id/btn_order"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button"
+            android:text="Order"
+            app:layout_constraintStart_toStartOf="@+id/guideline1"
+            app:layout_constraintEnd_toEndOf="@+id/guideline2"
+            android:textAllCaps="false"
+            android:layout_marginTop="32dp"
+            app:layout_constraintTop_toBottomOf="@+id/linear_employer_data"
+            android:textColor="@color/white"
+            />
 
         <ProgressBar
             android:id="@+id/progressbar"
@@ -242,9 +246,6 @@
             android:layout_marginTop="45dp"
             android:visibility="invisible"
             />
-
-
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

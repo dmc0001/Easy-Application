@@ -10,10 +10,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.easy.R
 import com.example.easy.adapters.ViewPager2Images
+import com.example.easy.data.Order
 import com.example.easy.databinding.FragmentDetailsJobInfoBinding
+import com.example.easy.dialogs.setupBottomSheetOrderDialog
 import com.example.easy.utils.Resource
 import com.example.easy.utils.hideBottomNav
 import com.example.easy.viewmodels.JobDetailsViewModel
@@ -28,15 +31,13 @@ class DetailsJobInfoFragment : Fragment() {
     lateinit var binding: FragmentDetailsJobInfoBinding
     private val viewPagerAdapter by lazy { ViewPager2Images() }
     private val args by navArgs<DetailsJobInfoFragmentArgs>()
-    val viewmodel by viewModels<JobDetailsViewModel>()
+    private val jobDetailsViewModel by viewModels<JobDetailsViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
-        /* val bottomNavigationView = (activity as ClientActivity).findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-         bottomNavigationView.visibility = View.GONE*/
+
         hideBottomNav()
 
         binding = FragmentDetailsJobInfoBinding.inflate(layoutInflater)
@@ -46,9 +47,18 @@ class DetailsJobInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupViewPagerRv()
-        viewmodel.fetchEmployerInfo(args.jobInfo.uid.toString())
+        val dotsIndicator = binding.circleIndicator
+        dotsIndicator.setViewPager2(binding.viewpager2Images)
+        jobDetailsViewModel.fetchEmployerInfo(args.jobInfo.uid.toString())
 
         binding.apply {
+
+            btnOrder.setOnClickListener {
+                setupBottomSheetOrderDialog { date, location, description ->
+                    val order = Order(args.jobInfo,description,date,location)
+                    jobDetailsViewModel.addOrder(order)
+                }
+            }
             tvJobTitle.text = args.jobInfo.jobTitle
             tvJobPrice.text = "${args.jobInfo.price} DZD"
             tvJobDescription.text = args.jobInfo.jobDescription
@@ -65,28 +75,34 @@ class DetailsJobInfoFragment : Fragment() {
                     chipGroupSkills.addView(chip)
                 }
             }
+            imgClose.setOnClickListener {
+                findNavController().navigateUp()
+            }
 
         }
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewmodel.employerInfo.collectLatest { resource ->
+                jobDetailsViewModel.employerInfo.collectLatest { resource ->
                     when (resource) {
                         is Resource.Loading -> {
-                            // showLoading()
+                            showLoading()
                         }
 
                         is Resource.Success -> {
                             Log.d("debugging", resource.data.toString())
                             binding.apply {
                                 tvEmail.text = resource.data?.email
-                                tvFullName.text = resource.data?.firstName +" "+ resource.data?.lastName
+                                tvFullName.text =
+                                    resource.data?.firstName + " " + resource.data?.lastName
                                 tvPhone.text = resource.data?.phoneNumber
 
                             }
+                            hideLoading()
                         }
 
                         is Resource.Failed -> {
                             Log.d("debugging", resource.message.toString())
+                            hideLoading()
                             Snackbar.make(view, resource.message.toString(), Snackbar.LENGTH_LONG)
                                 .show()
                         }
@@ -96,6 +112,41 @@ class DetailsJobInfoFragment : Fragment() {
                 }
             }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                jobDetailsViewModel.order.collectLatest { resource ->
+                    when (resource) {
+                        is Resource.Loading -> {
+                            binding.btnOrder.startAnimation()
+                        }
+
+                        is Resource.Success -> {
+                            Log.d("debugging", resource.data.toString())
+                            Snackbar.make(view,resource.message.toString(), Snackbar.LENGTH_LONG)
+                                .show()
+                            binding.btnOrder.revertAnimation()
+                        }
+
+                        is Resource.Failed -> {
+                            Log.d("debugging", resource.message.toString())
+                            binding.btnOrder.revertAnimation()
+                            Snackbar.make(view, resource.message.toString(), Snackbar.LENGTH_LONG)
+                                .show()
+                        }
+
+                        else -> Unit
+                    }
+                }
+            }
+        }
+    }
+
+    private fun hideLoading() {
+        binding.progressbar.visibility = View.GONE
+    }
+
+    private fun showLoading() {
+        binding.progressbar.visibility = View.VISIBLE
     }
 
     private fun setupViewPagerRv() {
