@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:background="#FAFDFF"
     app:cardCornerRadius="16dp"
-    app:elevation="0dp">
+    app:cardElevation="2dp">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/img_product"
-            android:layout_width="125dp"
-            android:layout_height="115dp"
+            android:layout_width="150dp"
+            android:layout_height="125dp"
             android:scaleType="fitCenter"
             android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"

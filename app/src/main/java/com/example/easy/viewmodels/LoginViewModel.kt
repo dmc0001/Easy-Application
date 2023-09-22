@@ -5,12 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.easy.utils.Constants.USER_COLLECTION
 import com.example.easy.utils.LoginFieldsState
 import com.example.easy.utils.LoginValidation
-import com.example.easy.utils.RegisterValidation
 import com.example.easy.utils.Resource
 import com.example.easy.utils.validEmailLogin
-import com.example.easy.utils.validEmailRegister
 import com.example.easy.utils.validPasswordLogin
-import com.example.easy.utils.validPasswordRegister
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore

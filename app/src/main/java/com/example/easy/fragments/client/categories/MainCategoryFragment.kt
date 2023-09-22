@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.easy.R
 import com.example.easy.adapters.JobsInfoAdapter
 import com.example.easy.databinding.FragmentMainCategoryBinding
+import com.example.easy.utils.ItemSpacingDecoration
 import com.example.easy.utils.Resource
 import com.example.easy.viewmodels.MainCategoryViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -100,5 +101,6 @@ class MainCategoryFragment : Fragment() {
             layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = jobsInfoAdapter
         }
+        binding.rvJobsInfo.addItemDecoration(ItemSpacingDecoration(16))
     }
 }

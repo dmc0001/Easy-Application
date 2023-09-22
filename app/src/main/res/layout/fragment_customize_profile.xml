@@ -51,20 +51,7 @@
                     app:layout_constraintStart_toEndOf="@id/img_close"
                     app:layout_constraintTop_toTopOf="@id/img_close" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="85dp"
-                    android:layout_height="45dp"
-                    android:background="@drawable/white_button"
-                    android:layout_marginEnd="25dp"
-                    android:layout_marginTop="25dp"
-                    android:textColor="#6758a5"
-                    android:drawableEnd="@drawable/baseline_logout_24"
-                    android:text="Log out"
 
-                    android:textAllCaps="false"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
@@ -97,7 +84,7 @@
             android:layout_height="28dp"
             android:layout_marginTop="50dp"
             android:background="@drawable/button"
-        android:padding="5dp"
+            android:padding="5dp"
             android:src="@drawable/baseline_edit_24"
             app:layout_constraintBottom_toBottomOf="@id/imageUser"
             app:layout_constraintEnd_toEndOf="@id/imageUser" />
@@ -120,31 +107,31 @@
                 android:layout_height="wrap_content"
                 android:hint="First Name" />
         </com.google.android.material.textfield.TextInputLayout>
-     <!--   <EditText
-            android:id="@+id/edFirstName"
-            android:layout_width="0dp"
-            android:layout_height="45dp"
-            android:layout_marginTop="40dp"
-            android:gravity="center"
-            android:hint="First Name"
-            android:singleLine="true"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
-            app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-            app:layout_constraintTop_toBottomOf="@+id/imageUser" />-->
+        <!--   <EditText
+               android:id="@+id/edFirstName"
+               android:layout_width="0dp"
+               android:layout_height="45dp"
+               android:layout_marginTop="40dp"
+               android:gravity="center"
+               android:hint="First Name"
+               android:singleLine="true"
+               android:textStyle="bold"
+               app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+               app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+               app:layout_constraintTop_toBottomOf="@+id/imageUser" />-->
 
-       <!-- <EditText
-            android:id="@+id/edLastName"
-            android:layout_width="0dp"
-            android:layout_height="45dp"
-            android:layout_marginTop="15dp"
-            android:gravity="center"
-            android:hint="Last Name"
-            android:singleLine="true"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@id/rightGuideline"
-            app:layout_constraintStart_toStartOf="@id/leftGuideline"
-            app:layout_constraintTop_toBottomOf="@id/edFirstNameLabel" />-->
+        <!-- <EditText
+             android:id="@+id/edLastName"
+             android:layout_width="0dp"
+             android:layout_height="45dp"
+             android:layout_marginTop="15dp"
+             android:gravity="center"
+             android:hint="Last Name"
+             android:singleLine="true"
+             android:textStyle="bold"
+             app:layout_constraintEnd_toEndOf="@id/rightGuideline"
+             app:layout_constraintStart_toStartOf="@id/leftGuideline"
+             app:layout_constraintTop_toBottomOf="@id/edFirstNameLabel" />-->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edLastNameLabel"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -218,7 +205,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/rightGuideline"
             app:layout_constraintStart_toStartOf="@id/leftGuideline"
-            
+
             android:layout_marginBottom="20dp"/>
 
         <androidx.constraintlayout.widget.Guideline

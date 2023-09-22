@@ -1,5 +1,6 @@
 package com.example.easy.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.easy.data.Order
@@ -28,6 +29,8 @@ class JobDetailsViewModel @Inject constructor(
 
     private val _order = MutableStateFlow<Resource<Order>>(Resource.Unspecified())
     val order: StateFlow<Resource<Order>> = _order
+    private val _updatedOrder = MutableStateFlow<Resource<Map<String, Any>>>(Resource.Unspecified())
+    val updatedOrder: StateFlow<Resource<Map<String, Any>>> = _updatedOrder
 
     fun fetchEmployerInfo(document: String) {
         runBlocking {
@@ -60,35 +63,23 @@ class JobDetailsViewModel @Inject constructor(
         runBlocking {
             _order.emit(Resource.Loading())
         }
+        Log.d("test", cartOrder.jobInformation.uid!!)
         db.collection(USER_COLLECTION).document(auth.uid!!).collection(ORDER_COLLECTION)
-            .whereEqualTo("JobInformation.id", cartOrder.jobInformation.uid)
+            .whereEqualTo("jobInformation.uid", cartOrder.jobInformation.uid)
             .get()
-            .addOnSuccessListener {
-                if (it.isEmpty) {
+            .addOnSuccessListener { query ->
+                Log.d("yasser", query.isEmpty.toString())
+                if (query.isEmpty) {
                     addNewOrder(cartOrder)
                 } else {
-
-                   /* val existingOrderDocument = it.documents.first()
-                    val existingOrder = existingOrderDocument.toObject(Order::class.java)*/
-                  //  if (existingOrder != null) {
-                        // Update the quantity of the existing order
-                      /*  existingOrder.date = cartOrder.date
-                        existingOrder.location = cartOrder.location
-                        existingOrder.description = cartOrder.description
-                        updateOrder(existingOrderDocument.id, existingOrder)*/
-
-                  //  }
-                    /*val order = it.first().toObject(Order::class.java)
-                    if (order == cartOrder) {
-
-                    } else {
-                        addNewOrder(cartOrder)
-                    }*/
+                    val updatedMap = update(cartOrder)
+                    updateOrder(query.documents[0].id, updatedMap)
                 }
             }
             .addOnFailureListener { }
 
     }
+
 
     private fun addNewOrder(cartOrder: Order) {
         firebaseCommon.addOrder(cartOrder) { addedOrder, e ->
@@ -103,13 +94,31 @@ class JobDetailsViewModel @Inject constructor(
 
     }
 
-    private fun updateOrder(orderId: String, updatedOrder: Order) {
+    private fun update(updatedOrder: Order): Map<String, Any> {
+        val map = mutableMapOf<String, Any>()
+        if (updatedOrder.description.isNotEmpty()) {
+            map["jobInformation"] = updatedOrder.jobInformation
+            map["description"] = updatedOrder.description
+            map["date"] = updatedOrder.date
+            map["location"] = updatedOrder.location
+
+        }
+        return map
+    }
+
+
+    private fun updateOrder(orderId: String, updatedOrder: Map<String, Any>) {
         firebaseCommon.updateOrder(orderId, updatedOrder) { updatedOrder, e ->
             viewModelScope.launch {
                 if (e == null) {
-                    _order.emit(Resource.Success(updatedOrder!!, "Order updated successfully"))
+                    _updatedOrder.emit(
+                        Resource.Success(
+                            updatedOrder!!,
+                            "Order updated successfully"
+                        )
+                    )
                 } else {
-                    _order.emit(Resource.Failed(e.message.toString()))
+                    _updatedOrder.emit(Resource.Failed(e.message.toString()))
                 }
             }
         }

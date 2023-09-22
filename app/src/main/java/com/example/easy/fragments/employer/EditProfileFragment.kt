@@ -47,12 +47,8 @@ class EditProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
         val selectedSkills: MutableList<String> = mutableListOf()
-
         binding.apply {
-
 
             val categoryOptions = resources.getStringArray(R.array.jobs_categories)
             val categoryAdapter = ArrayAdapter(
@@ -99,9 +95,7 @@ class EditProfileFragment : Fragment() {
                 layoutAddSkill.visibility = View.GONE
             }
 
-            /*btnImagePicker.setOnClickListener {
-                openImagePicker()
-            }*/
+
             val selectImageActivityResult =
                 registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                     if (result.resultCode == RESULT_OK) {
