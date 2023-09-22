@@ -5,20 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="16dp"
-    app:cardElevation="0dp"
-    app:cardBackgroundColor="#e8deee"
-    >
+    android:background="#FAFDFF"
+    app:cardElevation="2dp">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp">
+        android:layout_height="125dp">
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
         <ImageView
             android:id="@+id/job_image_item"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="10dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="10dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,7 +40,7 @@
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/job_image_item"
+            app:layout_constraintStart_toEndOf="@id/guideline"
             app:layout_constraintTop_toTopOf="@id/job_image_item" />
 
         <TextView
@@ -40,6 +48,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="$1600"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+
+            app:layout_constraintEnd_toEndOf="@+id/tv_job_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_job_title" />
+        <TextView
+            android:id="@+id/tv_job_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location"
             android:textColor="@color/black"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="@id/tv_job_title"
@@ -50,11 +68,12 @@
             android:layout_width="83dp"
             android:layout_height="28dp"
             android:layout_margin="16dp"
-            android:background="@drawable/button"
-            android:text="Read more"
+            android:background="@drawable/white_button"
+            android:text="Edit"
             android:textAllCaps="false"
-            android:textColor="@color/white"
+            android:textColor="#6758a5"
             android:textSize="10dp"
+
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

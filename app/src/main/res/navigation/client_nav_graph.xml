@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/client_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/customizeProfileFragment">
 
     <fragment
         android:id="@+id/homeFragment"
@@ -46,4 +46,10 @@
             android:name="jobInfo"
             app:argType="com.example.easy.data.JobInformation" />
     </fragment>
+    <fragment
+        android:id="@+id/customizeProfileFragment"
+        android:name="com.example.easy.fragments.client.CustomizeProfileFragment"
+        android:label="CustomizeProfileFragment"
+        tools:layout="@layout/fragment_customize_profile"
+        />
 </navigation>

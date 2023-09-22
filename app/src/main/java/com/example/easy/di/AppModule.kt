@@ -1,5 +1,7 @@
 package com.example.easy.di
 
+import android.app.Application
+import android.content.Context.MODE_PRIVATE
 import com.example.easy.firebase.FirebaseCommon
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -34,5 +36,10 @@ object AppModule {
         firebaseFirestore: FirebaseFirestore
 
     ) = FirebaseCommon(firebaseFirestore, firebaseAuth)
+
+    @Provides
+    fun provideIntroductionSP(
+        application: Application
+    ) = application.getSharedPreferences("IntroductionSP", MODE_PRIVATE)
 
 }

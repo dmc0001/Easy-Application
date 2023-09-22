@@ -8,10 +8,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.easy.data.JobInformation
+import com.example.easy.databinding.JobInformationItemBinding
 import com.example.easy.databinding.ProductItemBinding
 
-class JobsInfoAdapter : RecyclerView.Adapter<JobsInfoAdapter.SpecialViewHolder>() {
-    inner class SpecialViewHolder(private val binding: ProductItemBinding) :
+class JobsInfoAdapter : RecyclerView.Adapter<JobsInfoAdapter.JobsInfoViewHolder>() {
+    inner class JobsInfoViewHolder(private val binding: ProductItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(jobInformation: JobInformation) {
@@ -29,6 +30,8 @@ class JobsInfoAdapter : RecyclerView.Adapter<JobsInfoAdapter.SpecialViewHolder>(
         }
     }
 
+
+
     private val diffCallback = object : DiffUtil.ItemCallback<JobInformation>() {
         override fun areItemsTheSame(oldItem: JobInformation, newItem: JobInformation): Boolean {
             return oldItem.uid == newItem.uid
@@ -40,21 +43,23 @@ class JobsInfoAdapter : RecyclerView.Adapter<JobsInfoAdapter.SpecialViewHolder>(
 
     }
     val differ = AsyncListDiffer(this, diffCallback)
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SpecialViewHolder {
-        return SpecialViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JobsInfoViewHolder {
+        return JobsInfoViewHolder(
             ProductItemBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )
     }
 
-    override fun onBindViewHolder(holder: SpecialViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: JobsInfoAdapter.JobsInfoViewHolder, position: Int) {
         val job = differ.currentList[position]
         holder.bind(jobInformation = job)
         holder.itemView.setOnClickListener {
             onClick?.invoke(job)
         }
     }
+
+
 
     override fun getItemCount(): Int {
         return differ.currentList.size

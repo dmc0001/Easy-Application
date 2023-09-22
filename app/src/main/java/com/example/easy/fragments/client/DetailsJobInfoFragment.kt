@@ -55,8 +55,10 @@ class DetailsJobInfoFragment : Fragment() {
 
             btnOrder.setOnClickListener {
                 setupBottomSheetOrderDialog { date, location, description ->
-                    val order = Order(args.jobInfo,description,date,location)
+                    val order = Order(args.jobInfo, description, date, location)
                     jobDetailsViewModel.addOrder(order)
+                    // jobDetailsViewModel.updatedOrder(order)
+
                 }
             }
             tvJobTitle.text = args.jobInfo.jobTitle
@@ -122,7 +124,35 @@ class DetailsJobInfoFragment : Fragment() {
 
                         is Resource.Success -> {
                             Log.d("debugging", resource.data.toString())
-                            Snackbar.make(view,resource.message.toString(), Snackbar.LENGTH_LONG)
+                            Snackbar.make(view, resource.message.toString(), Snackbar.LENGTH_LONG)
+                                .show()
+                            binding.btnOrder.revertAnimation()
+                        }
+
+                        is Resource.Failed -> {
+                            Log.d("debugging", resource.message.toString())
+                            binding.btnOrder.revertAnimation()
+                            Snackbar.make(view, resource.message.toString(), Snackbar.LENGTH_LONG)
+                                .show()
+                        }
+
+                        else -> Unit
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                jobDetailsViewModel.updatedOrder.collectLatest { resource ->
+                    when (resource) {
+                        is Resource.Loading -> {
+                            binding.btnOrder.startAnimation()
+                        }
+
+                        is Resource.Success -> {
+                            Log.d("debugging", resource.data.toString())
+                            Snackbar.make(view, resource.message.toString(), Snackbar.LENGTH_LONG)
                                 .show()
                             binding.btnOrder.revertAnimation()
                         }
