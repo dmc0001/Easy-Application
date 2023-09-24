@@ -1,13 +1,11 @@
 package com.example.easy.viewmodels
 
 import android.app.Application
-import android.graphics.Bitmap
 import android.net.Uri
-import android.provider.MediaStore
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.easy.EasyApp
 import com.example.easy.data.User
 import com.example.easy.utils.Constants.USER_COLLECTION
 import com.example.easy.utils.RegisterValidation
@@ -15,25 +13,20 @@ import com.example.easy.utils.Resource
 import com.example.easy.utils.validEmailRegister
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import java.io.ByteArrayOutputStream
 import java.util.UUID
 import javax.inject.Inject
-import kotlin.reflect.KFunction1
 
 @HiltViewModel
 class CustomizeProfileViewModel @Inject constructor(
     private val db: FirebaseFirestore,
     private val auth: FirebaseAuth,
     private val storage: FirebaseStorage,
-    private val app: Application
-) : AndroidViewModel(app) {
+) : ViewModel() {
     private val _userData = MutableStateFlow<Resource<User>>(Resource.Unspecified())
     val userData: Flow<Resource<User>> = _userData
 
@@ -41,9 +34,6 @@ class CustomizeProfileViewModel @Inject constructor(
     val editUserInfo: Flow<Resource<User>> = _editUserInfo
 
     fun getUser() {
-        viewModelScope.launch {
-            _userData.emit(Resource.Loading())
-        }
         db.collection(USER_COLLECTION)
             .document(auth.uid!!) // Use the UID as the document ID
             .get()
@@ -62,7 +52,7 @@ class CustomizeProfileViewModel @Inject constructor(
     private fun uploadFile(
         fileToUpload: String,
         location: String,
-        onSuccess: KFunction1<Uri, Unit>,
+        onSuccess: (Uri) -> Unit,
         onFailure: (Exception) -> Unit
     ): String {
         viewModelScope.launch {
@@ -114,7 +104,6 @@ class CustomizeProfileViewModel @Inject constructor(
                 transition.update(documentRef, mapUser)
 
 
-
             } else {
                 val mapUser = mapOf(
                     "firstName" to user.firstName,
@@ -136,23 +125,34 @@ class CustomizeProfileViewModel @Inject constructor(
     }
 
     private fun saveUserInformationWithNewImage(user: User, imageUri: Uri) {
-        Log.d("SaveUserInformationWithNewImage",imageUri.toString())
+        Log.d("SaveUserInformationWithNewImage", imageUri.toString())
         viewModelScope.launch {
             try {
 
-                val imageBitMap = MediaStore.Images.Media.getBitmap(
-                    getApplication<EasyApp>().contentResolver,
-                    imageUri
-                )
-                val byteArrayOutputStream = ByteArrayOutputStream()
-                imageBitMap.compress(Bitmap.CompressFormat.JPEG, 96, byteArrayOutputStream)
-                val imageByteArray = byteArrayOutputStream.toByteArray()
-                val imageDirectory =
-                    storage.reference.child("ProfileImage/${auth.uid}/${UUID.randomUUID()}")
-                val result = imageDirectory.putBytes(imageByteArray)
-                val imageUrl = result.result.storage.downloadUrl.await().toString()
-                saveUserInformation(user.copy(imagePath = imageUrl), false)
+                uploadFile(
+                    imageUri.toString(),
+                    "ProfileImage/${auth.uid}/${UUID.randomUUID()}",
+                    onSuccess = {
+                        saveUserInformation(
+                            user.copy(imagePath = it.toString()),
+                            false
+                        )
+                        viewModelScope.launch {
+                            _editUserInfo.emit(
+                                Resource.Success(
+                                    user.copy(
+                                        imagePath = it.toString()
+                                    ), ""
+                                )
+                            )
+                        }
+                    },
+                    onFailure = {})
+
+                //   val imageUrl = result.result.storage.downloadUrl.await().toString()
+
             } catch (e: Exception) {
+                Log.d("SaveUserInformationWithNewImage", "Exception : ${e.message}")
                 _editUserInfo.emit(Resource.Failed(e.message.toString())) // Emit the error message
             }
         }
@@ -169,83 +169,4 @@ class CustomizeProfileViewModel @Inject constructor(
 }
 
 
-/* private fun uploadFile(
-     fileToUpload: String,
-     location: String,
-     onSuccess: KFunction1<Uri, Unit>,
-     onFailure: (Exception) -> Unit
- ): String {
-     viewModelScope.launch {
-         _userData.emit(Resource.Loading())
-     }
-     val storageRef = storage.reference
-
-     val child = storageRef.child(location)
-     child.putFile(Uri.parse(fileToUpload)).addOnCompleteListener { task ->
-         if (task.isSuccessful)
-             child.downloadUrl.addOnSuccessListener(onSuccess)
-                 .addOnFailureListener(onFailure)
-         else
-             task.exception?.let { onFailure(it) }
-     }
-     return child.downloadUrl.toString()
- }
-
- fun userInfo(user: User) {
-     val uid = auth.currentUser?.uid
-     if (uid != null) {
-         val image = user.imagePath
-
-         // Function to handle successful image upload
-         fun handleImageUpload(imageDownloadUrl: Uri) {
-             // All images uploaded, continue with Firestore document creation
-             createFirestoreDocument(uid, user)
-
-         }
-
-         // Function to handle image upload failure
-         fun handleImageUploadFailure(exception: Exception) {
-             // Handle image upload failure if needed
-             Log.e("ImageUpload", "Image upload failed: ${exception.message}")
-         }
-
-         // Upload images
-
-         val id = UUID.randomUUID().toString()
-         Log.d("Uploading Images", image)
-
-         uploadFile(
-             image, // Assuming image is a valid URI
-             "UserImage /$uid/$id",
-             onSuccess = ::handleImageUpload,
-             onFailure = ::handleImageUploadFailure
-         )
-
-
-     }
- }
-
- private fun createFirestoreDocument(
-     uid: String,
-     user: User
- ) {
-     // Create Firestore document
-     val data = hashMapOf(
-         "uid" to uid,
-         "jobTitle" to user.firstName,
-         "jobCategory" to user.lastName,
-         "jobDescription" to user.email,
-         "jobSkills" to user.imagePath,
-     )
-
-     db.collection(USER_COLLECTION)
-         .document(uid) // Use the UID as the document ID
-         .set(data, SetOptions.merge())
-         .addOnSuccessListener {
-             _userData.value = Resource.Success(user, "Saving data successful")
-         }
-         .addOnFailureListener { e ->
-             _userData.value = Resource.Failed(e.message.toString())
-         }
- }*/
 

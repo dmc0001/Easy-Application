@@ -14,11 +14,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.easy.data.User
 import com.example.easy.databinding.FragmentCustomizeProfileBinding
+import com.example.easy.dialogs.setupBottomSheetForgetPasswordDialog
 import com.example.easy.utils.Resource
+import com.example.easy.utils.hideBottomNav
 import com.example.easy.viewmodels.CustomizeProfileViewModel
+import com.example.easy.viewmodels.LoginViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -29,10 +33,12 @@ class CustomizeProfileFragment : Fragment() {
     private lateinit var binding: FragmentCustomizeProfileBinding
     private var selectedImageUri: Uri? = null
     private val customizeProfileViewModel by viewModels<CustomizeProfileViewModel>()
+    private val viewModelLogin by viewModels<LoginViewModel>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        hideBottomNav()
         // Inflate the layout for this fragment
         binding = FragmentCustomizeProfileBinding.inflate(layoutInflater)
         return binding.root
@@ -42,7 +48,7 @@ class CustomizeProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-
+            customizeProfileViewModel.getUser()
             buttonSave.setOnClickListener {
 
                 val firstName = edFirstName.text.toString().trim()
@@ -59,6 +65,14 @@ class CustomizeProfileFragment : Fragment() {
                 }
 
             }
+            imgClose.setOnClickListener {
+                findNavController().navigateUp()
+            }
+            tvUpdatePassword.setOnClickListener {
+                setupBottomSheetForgetPasswordDialog { email ->
+                    viewModelLogin.resetPassword(email)
+                }
+            }
         }
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -69,14 +83,15 @@ class CustomizeProfileFragment : Fragment() {
                         }
 
                         is Resource.Success -> {
-                            hideUserLoading()
-                           // showUserInformation(resource.data!!)
+
+                              hideUserLoading()
+                            showUserInformation(resource.data!!)
                             Log.d("debugging", "${resource.message}")
-                            Snackbar.make(view, "${resource.message}", Snackbar.LENGTH_LONG).show()
+                           // Snackbar.make(view, "${resource.message}", Snackbar.LENGTH_LONG).show()
                         }
 
                         is Resource.Failed -> {
-                            hideUserLoading()
+                            showUserLoading()
                             Log.d("debugging", " the problem is : ${resource.message}")
                             Snackbar.make(view, " the problem is : ${resource.message}", Snackbar.LENGTH_LONG).show()
                         }
