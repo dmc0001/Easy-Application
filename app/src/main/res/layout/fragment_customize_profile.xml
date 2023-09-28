@@ -90,7 +90,7 @@
             app:layout_constraintEnd_toEndOf="@id/imageUser" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edFirstNameLabel"
+            android:id="@+id/edDateLabel"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_marginTop="40dp"
@@ -107,39 +107,15 @@
                 android:layout_height="wrap_content"
                 android:hint="First Name" />
         </com.google.android.material.textfield.TextInputLayout>
-        <!--   <EditText
-               android:id="@+id/edFirstName"
-               android:layout_width="0dp"
-               android:layout_height="45dp"
-               android:layout_marginTop="40dp"
-               android:gravity="center"
-               android:hint="First Name"
-               android:singleLine="true"
-               android:textStyle="bold"
-               app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
-               app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-               app:layout_constraintTop_toBottomOf="@+id/imageUser" />-->
 
-        <!-- <EditText
-             android:id="@+id/edLastName"
-             android:layout_width="0dp"
-             android:layout_height="45dp"
-             android:layout_marginTop="15dp"
-             android:gravity="center"
-             android:hint="Last Name"
-             android:singleLine="true"
-             android:textStyle="bold"
-             app:layout_constraintEnd_toEndOf="@id/rightGuideline"
-             app:layout_constraintStart_toStartOf="@id/leftGuideline"
-             app:layout_constraintTop_toBottomOf="@id/edFirstNameLabel" />-->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edLastNameLabel"
+            android:id="@+id/edLocationLabel"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
             app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-            app:layout_constraintTop_toBottomOf="@id/edFirstNameLabel"
+            app:layout_constraintTop_toBottomOf="@id/edDateLabel"
             >
 
             <com.google.android.material.textfield.TextInputEditText
@@ -151,26 +127,15 @@
                 android:hint="Last Name" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!--<EditText
-            android:id="@+id/edEmail"
-            android:layout_width="0dp"
-            android:layout_height="45dp"
-            android:layout_marginTop="10dp"
-            android:editable="false"
-            android:gravity="center"
-            android:hint="Email"
-            android:singleLine="true"
-            app:layout_constraintEnd_toEndOf="@id/rightGuideline"
-            app:layout_constraintStart_toStartOf="@id/leftGuideline"
-            app:layout_constraintTop_toBottomOf="@id/edLastNameLabel" />-->
+
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edEmailLabel"
+            android:id="@+id/edDescriptionLabel"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
             app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-            app:layout_constraintTop_toBottomOf="@id/edLastNameLabel"
+            app:layout_constraintTop_toBottomOf="@id/edLocationLabel"
             >
 
             <com.google.android.material.textfield.TextInputEditText
@@ -189,7 +154,7 @@
             android:layout_marginTop="10dp"
             android:text="Forgot/Change password"
             app:layout_constraintStart_toStartOf="@id/leftGuideline"
-            app:layout_constraintTop_toBottomOf="@+id/edEmailLabel" />
+            app:layout_constraintTop_toBottomOf="@+id/edDescriptionLabel" />
 
         <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
             android:id="@+id/buttonSave"

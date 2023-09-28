@@ -8,7 +8,9 @@ import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.easy.R
+import com.example.easy.viewmodels.OrderViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.util.Calendar
@@ -17,7 +19,6 @@ import java.util.Calendar
 fun Fragment.setupBottomSheetOrderDialog(
     onSendClick: (String, String, String) -> Unit
 ) {
-
     val dialog = BottomSheetDialog(requireContext())
     val view = layoutInflater.inflate(R.layout.order_employer_dialog, null)
     dialog.setContentView(view)
@@ -55,6 +56,7 @@ fun Fragment.setupBottomSheetOrderDialog(
         return "${calendar.get(Calendar.YEAR)}-${selectedMonth + 1}-${selectedDay}"
     }
 
+
     fun showDatePicker(editText: EditText) {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
@@ -78,9 +80,6 @@ fun Fragment.setupBottomSheetOrderDialog(
     etDate.setOnClickListener {
         showDatePicker(etDate)
     }
-
-
-
 
 
 }

@@ -40,6 +40,7 @@ class VerificationFragment : Fragment() {
         binding = FragmentVerificationBinding.inflate(layoutInflater)
         return binding.root
 
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.easy.R
 import com.example.easy.adapters.JobsInfoAdapter
 import com.example.easy.databinding.FragmentBaseCategoryBinding
+import com.example.easy.fragments.loginRegister.RegisterFragmentDirections
 
 
 open class BaseCategoryFragment : Fragment() {
@@ -32,8 +33,8 @@ open class BaseCategoryFragment : Fragment() {
         setupJobsInfoAdapter()
 
         jobsInfoAdapter.onClick = {
-            val b = Bundle().apply { putParcelable("jobInfo",it) }
-            findNavController().navigate(R.id.action_homeFragment_to_detailsJobInfoFragment2,b)
+            val bundle = Bundle().apply { putParcelable("jobInfo",it) }
+            findNavController().navigate(R.id.action_homeFragment_to_detailsJobInfoFragment2,bundle)
         }
 
         binding.nestedScrollMainCategory.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _ ->

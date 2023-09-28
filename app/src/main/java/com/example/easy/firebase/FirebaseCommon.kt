@@ -5,7 +5,6 @@ import com.example.easy.utils.Constants.ORDER_COLLECTION
 import com.example.easy.utils.Constants.USER_COLLECTION
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 
 class FirebaseCommon(
     private val firestore: FirebaseFirestore,
@@ -29,7 +28,13 @@ class FirebaseCommon(
         updatedOrder: Map<String, Any>,
         onResult: (Map<String, Any>?, Exception?) -> Unit
     ) {
-        orderCollection.document(orderId).set(updatedOrder,SetOptions.merge())
+
+        firestore.runTransaction { transition ->
+            val docRef = orderCollection.document(orderId)
+
+            transition.update(docRef, updatedOrder)
+
+        }
             .addOnSuccessListener {
                 onResult(updatedOrder, null)
             }
@@ -37,6 +42,4 @@ class FirebaseCommon(
                 onResult(null, error)
             }
     }
-
-
 }

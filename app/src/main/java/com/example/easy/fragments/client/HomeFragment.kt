@@ -1,11 +1,18 @@
 package com.example.easy.fragments.client
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.bumptech.glide.Glide
 import com.example.easy.adapters.HomeViewpagerAdapter
+import com.example.easy.data.User
 import com.example.easy.databinding.FragmentHomeBinding
 import com.example.easy.fragments.client.categories.BusinessAdministrationFragment
 import com.example.easy.fragments.client.categories.ConstructionFragment
@@ -17,13 +24,18 @@ import com.example.easy.fragments.client.categories.MainCategoryFragment
 import com.example.easy.fragments.client.categories.ManufacturingFragment
 import com.example.easy.fragments.client.categories.TechnologyFragment
 import com.example.easy.fragments.client.categories.TransportationFragment
+import com.example.easy.utils.Resource
 import com.example.easy.utils.showBottomNav
+import com.example.easy.viewmodels.CustomizeProfileViewModel
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
+    private val profileViewModel by viewModels<CustomizeProfileViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,6 +48,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        profileViewModel.getUser()
         val categoriesFragments =
             arrayListOf(
                 MainCategoryFragment(),
@@ -70,7 +83,47 @@ class HomeFragment : Fragment() {
 
             }.attach()
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                profileViewModel.userData.collect { resource ->
+                    when (resource) {
+                        is Resource.Loading -> {
+                            Snackbar.make(view, "Loading", Snackbar.LENGTH_LONG).show()
 
+                        }
+
+                        is Resource.Success -> {
+
+                            showUserInformation(resource.data!!)
+                            Log.d("debugging", "${resource.message}")
+                            //Snackbar.make(view, "${resource.message}", Snackbar.LENGTH_LONG).show()
+                        }
+
+                        is Resource.Failed -> {
+
+                            Log.d(
+                                "debugging",
+                                "the problem is : ${resource.data?.firstName},${resource.data?.lastName},${resource.data?.email},${resource.data?.imagePath}"
+                            )
+                            Snackbar.make(
+                                view,
+                                " the problem is : ${resource.message}",
+                                Snackbar.LENGTH_LONG
+                            ).show()
+                        }
+
+                        else -> Unit
+                    }
+                }
+
+            }
+        }
+
+    }
+    private fun showUserInformation(data: User) {
+        binding.apply {
+            tvFirstName.text = "Hi, ${data.firstName} !"
+        }
     }
 
     override fun onResume() {

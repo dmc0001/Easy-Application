@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -41,6 +42,7 @@ class CustomizeProfileFragment : Fragment() {
         hideBottomNav()
         // Inflate the layout for this fragment
         binding = FragmentCustomizeProfileBinding.inflate(layoutInflater)
+
         return binding.root
     }
 
@@ -48,13 +50,10 @@ class CustomizeProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-            customizeProfileViewModel.getUser()
             buttonSave.setOnClickListener {
-
                 val firstName = edFirstName.text.toString().trim()
                 val lastName = edLastName.text.toString().trim()
                 val email = edEmail.text.toString().trim()
-              //  val data =  customizeProfileViewModel.getUser()
                 val user = User(firstName, lastName, email)
                 customizeProfileViewModel.updateUser(user, selectedImageUri)
             }
@@ -73,6 +72,7 @@ class CustomizeProfileFragment : Fragment() {
                     viewModelLogin.resetPassword(email)
                 }
             }
+            customizeProfileViewModel.getUser()
         }
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -133,8 +133,8 @@ class CustomizeProfileFragment : Fragment() {
 
     private fun showUserInformation(data: User) {
         binding.apply {
-            customizeProfileViewModel.getUser()
             Glide.with(this@CustomizeProfileFragment).load(data.imagePath).into(imageUser)
+                // edFirstName.setText(data.firstName)
             edFirstName.setText(data.firstName)
             edLastName.setText(data.lastName)
             edEmail.setText(data.email)

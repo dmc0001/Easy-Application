@@ -11,8 +11,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.easy.R
 import com.example.easy.adapters.JobsInfoOrdersAdapter
 import com.example.easy.databinding.FragmentOrderBinding
 import com.example.easy.utils.ItemSpacingDecoration
@@ -42,6 +44,11 @@ class OrderFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupJobsInfoOrdersAdapter()
 
+        jobsInfoOrdersAdapter.onClick = {
+            val bundle = Bundle().apply { putParcelable("order",it) }
+            findNavController().navigate(R.id.action_homeFragment_to_detailsJobInfoFragment2,bundle)
+           Snackbar.make(requireView(),"Edit...",Snackbar.LENGTH_LONG).show()
+        }
 
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -54,6 +61,7 @@ class OrderFragment : Fragment() {
 
                         is Resource.Success -> {
                             Log.d("debugging", resource.data.toString())
+
                             jobsInfoOrdersAdapter.differ.submitList(resource.data)
                             hideLoading()
                         }
@@ -69,6 +77,8 @@ class OrderFragment : Fragment() {
                 }
             }
         }
+
+
 
     }
 
