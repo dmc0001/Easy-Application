@@ -2,8 +2,11 @@ package com.example.easy.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.easy.data.JobInformation
 import com.example.easy.data.Order
-import com.example.easy.utils.Constants
+import com.example.easy.data.User
+import com.example.easy.utils.Constants.ORDER_COLLECTION
+import com.example.easy.utils.Constants.USER_COLLECTION
 import com.example.easy.utils.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -16,32 +19,35 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OrderViewModel @Inject constructor(
-    private val db: FirebaseFirestore,
-    private val auth: FirebaseAuth
+    private val db: FirebaseFirestore, private val auth: FirebaseAuth
 ) : ViewModel() {
 
     private val _orderJobs = MutableStateFlow<Resource<List<Order>>>(Resource.Unspecified())
     val orderJobs: StateFlow<Resource<List<Order>>> = _orderJobs
+
+    private val _orderUser = MutableStateFlow<Resource<Order>>(Resource.Unspecified())
+    val orderUser: StateFlow<Resource<Order>> = _orderUser
+
+
     init {
         fetchJobsInfoOrders()
     }
+
     private fun fetchJobsInfoOrders() {
         runBlocking {
             _orderJobs.emit(Resource.Loading())
         }
-        db.collection(Constants.USER_COLLECTION).document(auth.uid!!)
-            .collection(Constants.ORDER_COLLECTION)
-            .get()
+        db.collection(USER_COLLECTION).document(auth.uid!!).collection(ORDER_COLLECTION).get()
             .addOnSuccessListener { result ->
-                val specialJobOrders = result.toObjects(Order::class.java)
+                val jobOrders = result.toObjects(Order::class.java)
                 viewModelScope.launch {
 
                     _orderJobs.emit(
                         Resource.Success(
-                            specialJobOrders,
-                            "Get data jobs successfully"
+                            jobOrders, "Get data jobs successfully"
                         )
                     )
+
                 }
 
             }.addOnFailureListener {
@@ -51,4 +57,18 @@ class OrderViewModel @Inject constructor(
             }
     }
 
+    fun getOrder(document: String) {
+        db.collection(USER_COLLECTION).document(auth.uid!!)
+            .collection(ORDER_COLLECTION).whereEqualTo("jobInformationUid", document)
+            .get()
+            .addOnSuccessListener {
+                val order = it.toObjects(Order::class.java)
+                _orderUser.value = Resource.Success(order[0],"Get Order")
+            }.addOnFailureListener {
+                _orderUser.value = Resource.Failed("Failed Get Order")
+            }
+
+    }
 }
+
+

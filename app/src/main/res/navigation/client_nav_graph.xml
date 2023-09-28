@@ -38,8 +38,8 @@
         android:label="fragment_order"
         tools:layout="@layout/fragment_order" >
         <action
-            android:id="@+id/action_orderFragment_to_detailsJobInfoFragment2"
-            app:destination="@id/detailsJobInfoFragment2" />
+            android:id="@+id/action_orderFragment_to_editOrderFragment"
+            app:destination="@id/editOrderFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailsJobInfoFragment2"
@@ -56,4 +56,9 @@
         android:label="CustomizeProfileFragment"
         tools:layout="@layout/fragment_customize_profile"
         />
+    <fragment
+        android:id="@+id/editOrderFragment"
+        android:name="com.example.easy.fragments.client.EditOrderFragment"
+        android:label="fragment_edit_order"
+        tools:layout="@layout/fragment_edit_order" />
 </navigation>

@@ -1,33 +1,28 @@
 package com.example.easy.adapters
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.example.easy.data.JobInformation
 import com.example.easy.data.Order
 import com.example.easy.databinding.JobInformationItemBinding
-import com.example.easy.databinding.ProductItemBinding
 
 class JobsInfoOrdersAdapter : RecyclerView.Adapter<JobsInfoOrdersAdapter.OrdersViewHolder>() {
 
 
-    inner class OrdersViewHolder (private val binding: JobInformationItemBinding) :
+    inner class OrdersViewHolder(private val binding: JobInformationItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(order: Order) {
             binding.apply {
-                val imageUrl = order.jobInformation.jobImages?.get(0)
-                val imageUri = imageUrl?.let { Uri.parse(it) }
-                Glide.with(itemView)
-                    .load(imageUri)
-                    .into(jobImageItem)
-                tvJobTitle.text = order.jobInformation.jobTitle
-                tvJobPrice.text = order.jobInformation.price
-                tvJobLocation.text = order.jobInformation.location
+
+                tvJobTitle.text = order.jobTitle
+                tvJobDate.text = order.date
+                tvJobLocation.text = order.location
+                btnEditOrder.setOnClickListener {
+                    onClick?.invoke(order)
+                }
 
             }
         }
@@ -36,11 +31,11 @@ class JobsInfoOrdersAdapter : RecyclerView.Adapter<JobsInfoOrdersAdapter.OrdersV
     private val diffCallback = object : DiffUtil.ItemCallback<Order>() {
 
         override fun areItemsTheSame(oldItem: Order, newItem: Order): Boolean {
-            return oldItem.jobInformation.uid == newItem.jobInformation.uid
+            return oldItem.jobInformationUid == newItem.jobInformationUid
         }
 
         override fun areContentsTheSame(oldItem: Order, newItem: Order): Boolean {
-            return oldItem== newItem
+            return oldItem == newItem
         }
 
     }
@@ -56,9 +51,10 @@ class JobsInfoOrdersAdapter : RecyclerView.Adapter<JobsInfoOrdersAdapter.OrdersV
     override fun onBindViewHolder(holder: OrdersViewHolder, position: Int) {
         val order = differ.currentList[position]
         holder.bind(order)
-        holder.itemView.setOnClickListener {
+        /*holder.itemView.setOnClickListener {
             onClick?.invoke(order)
-        }
+        }*/
+
     }
 
     override fun getItemCount(): Int {
@@ -66,4 +62,5 @@ class JobsInfoOrdersAdapter : RecyclerView.Adapter<JobsInfoOrdersAdapter.OrdersV
     }
 
     var onClick: ((Order) -> Unit)? = null
+
 }

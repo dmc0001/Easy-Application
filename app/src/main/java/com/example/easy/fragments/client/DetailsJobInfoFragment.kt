@@ -33,12 +33,14 @@ class DetailsJobInfoFragment : Fragment() {
     private val args by navArgs<DetailsJobInfoFragmentArgs>()
     private val jobDetailsViewModel by viewModels<JobDetailsViewModel>()
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
         hideBottomNav()
+        args.jobInfo.uid
 
         binding = FragmentDetailsJobInfoBinding.inflate(layoutInflater)
         return binding.root
@@ -51,16 +53,22 @@ class DetailsJobInfoFragment : Fragment() {
         dotsIndicator.setViewPager2(binding.viewpager2Images)
         jobDetailsViewModel.fetchEmployerInfo(args.jobInfo.uid.toString())
 
+
         binding.apply {
 
             btnOrder.setOnClickListener {
                 setupBottomSheetOrderDialog { date, location, description ->
-                    val order = Order(args.jobInfo, description, date, location)
+                    val order = Order(
+                        args.jobInfo.jobTitle,
+                        args.jobInfo.uid.toString(),
+                        description,
+                        date,
+                        location
+                    )
                     jobDetailsViewModel.addOrder(order)
-                    // jobDetailsViewModel.updatedOrder(order)
-
                 }
             }
+
             tvJobTitle.text = args.jobInfo.jobTitle
             tvJobPrice.text = "${args.jobInfo.price} DZD"
             tvJobDescription.text = args.jobInfo.jobDescription
@@ -95,7 +103,7 @@ class DetailsJobInfoFragment : Fragment() {
                             binding.apply {
                                 tvEmail.text = resource.data?.email
                                 tvFullName.text =
-                                    resource.data?.firstName + " " + resource.data?.lastName
+                                    "${resource.data?.firstName}  ${resource.data?.lastName}"
                                 tvPhone.text = resource.data?.phoneNumber
 
                             }
@@ -116,6 +124,34 @@ class DetailsJobInfoFragment : Fragment() {
         }
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                jobDetailsViewModel.hasOrder.collectLatest { resource ->
+                    when (resource) {
+                        is Resource.Loading -> {
+
+                        }
+
+                        is Resource.Success -> {
+                            Log.d("debugging", resource.data.toString())
+                            binding.apply {
+                                if (resource.data == true) {
+                                    btnOrder.text = "Done"
+                                    btnOrder.isClickable = false
+                                }
+                            }
+
+                        }
+
+                        is Resource.Failed -> {
+
+                        }
+
+                        else -> Unit
+                    }
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 jobDetailsViewModel.order.collectLatest { resource ->
                     when (resource) {
                         is Resource.Loading -> {
@@ -127,6 +163,7 @@ class DetailsJobInfoFragment : Fragment() {
                             Snackbar.make(view, resource.message.toString(), Snackbar.LENGTH_LONG)
                                 .show()
                             binding.btnOrder.revertAnimation()
+
                         }
 
                         is Resource.Failed -> {
@@ -169,7 +206,10 @@ class DetailsJobInfoFragment : Fragment() {
                 }
             }
         }
+
+
     }
+
 
     private fun hideLoading() {
         binding.progressbar.visibility = View.GONE
