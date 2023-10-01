@@ -49,6 +49,9 @@
         <argument
             android:name="jobInfo"
             app:argType="com.example.easy.data.JobInformation" />
+        <action
+            android:id="@+id/action_detailsJobInfoFragment2_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/customizeProfileFragment"
@@ -60,5 +63,12 @@
         android:id="@+id/editOrderFragment"
         android:name="com.example.easy.fragments.client.EditOrderFragment"
         android:label="fragment_edit_order"
-        tools:layout="@layout/fragment_edit_order" />
+        tools:layout="@layout/fragment_edit_order" >
+        <argument
+            android:name="order"
+            app:argType="com.example.easy.data.Order" />
+        <action
+            android:id="@+id/action_editOrderFragment_to_detailsJobInfoFragment2"
+            app:destination="@id/detailsJobInfoFragment2" />
+    </fragment>
 </navigation>

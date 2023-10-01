@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -58,7 +57,7 @@ class CustomizeProfileFragment : Fragment() {
                 customizeProfileViewModel.updateUser(user, selectedImageUri)
             }
             imageEdit.setOnClickListener {
-                val intent = Intent(Intent.ACTION_GET_CONTENT).also {
+                Intent(Intent.ACTION_GET_CONTENT).also {
                     it.type = "image/*"
                     selectImageActivityResult.launch(it)
                 }
@@ -84,16 +83,19 @@ class CustomizeProfileFragment : Fragment() {
 
                         is Resource.Success -> {
 
-                              hideUserLoading()
+                            hideUserLoading()
                             showUserInformation(resource.data!!)
                             Log.d("debugging", "${resource.message}")
-                           // Snackbar.make(view, "${resource.message}", Snackbar.LENGTH_LONG).show()
                         }
 
                         is Resource.Failed -> {
                             showUserLoading()
                             Log.d("debugging", " the problem is : ${resource.message}")
-                            Snackbar.make(view, " the problem is : ${resource.message}", Snackbar.LENGTH_LONG).show()
+                            Snackbar.make(
+                                view,
+                                " the problem is : ${resource.message}",
+                                Snackbar.LENGTH_LONG
+                            ).show()
                         }
 
                         else -> Unit
@@ -118,8 +120,15 @@ class CustomizeProfileFragment : Fragment() {
 
                         is Resource.Failed -> {
                             binding.buttonSave.revertAnimation()
-                            Log.d("debugging", "the problem is : ${resource.data?.firstName},${resource.data?.lastName},${resource.data?.email},${resource.data?.imagePath}")
-                            Snackbar.make(view, " the problem is : ${resource.message}", Snackbar.LENGTH_LONG).show()
+                            Log.d(
+                                "debugging",
+                                "the problem is : ${resource.data?.firstName},${resource.data?.lastName},${resource.data?.email},${resource.data?.imagePath}"
+                            )
+                            Snackbar.make(
+                                view,
+                                " the problem is : ${resource.message}",
+                                Snackbar.LENGTH_LONG
+                            ).show()
                         }
 
                         else -> Unit
@@ -134,7 +143,7 @@ class CustomizeProfileFragment : Fragment() {
     private fun showUserInformation(data: User) {
         binding.apply {
             Glide.with(this@CustomizeProfileFragment).load(data.imagePath).into(imageUser)
-                // edFirstName.setText(data.firstName)
+            // edFirstName.setText(data.firstName)
             edFirstName.setText(data.firstName)
             edLastName.setText(data.lastName)
             edEmail.setText(data.email)

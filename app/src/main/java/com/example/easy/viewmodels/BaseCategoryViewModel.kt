@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.easy.data.Category
 import com.example.easy.data.JobInformation
 import com.example.easy.utils.Constants
+import com.example.easy.utils.Constants.JOB_INFO_COLLECTION
 import com.example.easy.utils.Resource
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +32,8 @@ class BaseCategoryViewModel constructor(
         runBlocking {
             _specialJobs.emit(Resource.Loading())
         }
-        db.collection(Constants.JOB_INFO_COLLECTION)
+
+        db.collection(JOB_INFO_COLLECTION)
             .whereEqualTo("jobCategory",category.category)
             .limit(pageInfo.jobInfoPage * 10)
             .get()

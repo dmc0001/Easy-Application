@@ -8,11 +8,9 @@ import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.easy.R
 import com.example.easy.adapters.JobsInfoAdapter
 import com.example.easy.databinding.FragmentBaseCategoryBinding
-import com.example.easy.fragments.loginRegister.RegisterFragmentDirections
 
 
 open class BaseCategoryFragment : Fragment() {
