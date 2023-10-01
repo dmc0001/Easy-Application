@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.easy.data.JobInformation
 import com.example.easy.data.Order
-import com.example.easy.data.User
+import com.example.easy.utils.Constants
 import com.example.easy.utils.Constants.ORDER_COLLECTION
 import com.example.easy.utils.Constants.USER_COLLECTION
 import com.example.easy.utils.Resource
@@ -27,6 +27,11 @@ class OrderViewModel @Inject constructor(
 
     private val _orderUser = MutableStateFlow<Resource<Order>>(Resource.Unspecified())
     val orderUser: StateFlow<Resource<Order>> = _orderUser
+    private val _orderDeleted = MutableStateFlow<Resource<Order>>(Resource.Unspecified())
+    val orderDeleted: StateFlow<Resource<Order>> = _orderDeleted
+
+    private val _go = MutableStateFlow<Resource<JobInformation>>(Resource.Unspecified())
+    val go: StateFlow<Resource<JobInformation>> = _go
 
 
     init {
@@ -63,11 +68,56 @@ class OrderViewModel @Inject constructor(
             .get()
             .addOnSuccessListener {
                 val order = it.toObjects(Order::class.java)
-                _orderUser.value = Resource.Success(order[0],"Get Order")
+                _orderUser.value = Resource.Success(order[0], "Get Order")
             }.addOnFailureListener {
-                _orderUser.value = Resource.Failed("Failed Get Order")
+                _orderUser.value = Resource.Failed("Failed get Order")
             }
 
+    }
+
+    fun deleteOrder(document: String) {
+      db.collection(USER_COLLECTION).document(auth.uid!!)
+            .collection(ORDER_COLLECTION).whereEqualTo("jobInformationUid", document)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                val orders = querySnapshot.toObjects(Order::class.java)
+
+
+                if (orders.isNotEmpty()) {
+                    // Delete the order
+                    val deletedOrder = orders[0]
+                    db.collection(USER_COLLECTION).document(auth.uid!!)
+                        .collection(ORDER_COLLECTION).document()
+                        .delete()
+                        .addOnSuccessListener {
+                            // Order deleted successfully, notify the user
+                            _orderDeleted.value = Resource.Success(deletedOrder, "Get Order")
+                        }
+                        .addOnFailureListener { e ->
+                            // Handle the error
+                            _orderDeleted.value = Resource.Failed("Failed delete Order")
+                        }
+                }
+            }
+
+    }
+
+    fun goToJobOrdered(document: String) {
+        runBlocking {
+            _go.emit(Resource.Loading())
+        }
+
+        db.collection(Constants.JOB_INFO_COLLECTION)
+            .document(document)
+            .get()
+            .addOnSuccessListener { result ->
+                val jobOrdered = result.toObject(JobInformation::class.java)
+                _go.value = Resource.Success(jobOrdered!!, "Get data jobs successfully")
+
+            }.addOnFailureListener {
+                _go.value = Resource.Failed("Failed getting data jobs successfully")
+
+            }
     }
 }
 

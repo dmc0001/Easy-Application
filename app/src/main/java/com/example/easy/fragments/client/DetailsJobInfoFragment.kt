@@ -86,7 +86,7 @@ class DetailsJobInfoFragment : Fragment() {
                 }
             }
             imgClose.setOnClickListener {
-                findNavController().navigateUp()
+                findNavController().navigate(R.id.action_detailsJobInfoFragment2_to_homeFragment)
             }
 
         }

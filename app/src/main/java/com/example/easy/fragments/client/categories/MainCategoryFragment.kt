@@ -65,6 +65,7 @@ class MainCategoryFragment : Fragment() {
                             Log.d("debugging", resource.data.toString())
                             jobsInfoAdapter.differ.submitList(resource.data)
                             hideLoading()
+
                         }
 
                         is Resource.Failed -> {

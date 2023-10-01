@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -13,13 +12,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.easy.R
 import com.example.easy.adapters.JobsInfoOrdersAdapter
 import com.example.easy.databinding.FragmentOrderBinding
 import com.example.easy.utils.ItemSpacingDecoration
 import com.example.easy.utils.Resource
-import com.example.easy.viewmodels.JobDetailsViewModel
+import com.example.easy.utils.showBottomNav
 import com.example.easy.viewmodels.OrderViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,8 +44,8 @@ class OrderFragment : Fragment() {
 
         jobsInfoOrdersAdapter.onClick = {
             val bundle = Bundle().apply { putParcelable("order",it) }
-            findNavController().navigate(R.id.action_homeFragment_to_detailsJobInfoFragment2,bundle)
-           Snackbar.make(requireView(),"Edit...",Snackbar.LENGTH_LONG).show()
+            findNavController().navigate(R.id.action_orderFragment_to_editOrderFragment,bundle)
+
         }
 
 
@@ -97,5 +95,9 @@ class OrderFragment : Fragment() {
 
     private fun hideLoading() {
         binding.progressBar.visibility = View.GONE
+    }
+    override fun onResume() {
+        super.onResume()
+        showBottomNav()
     }
 }
