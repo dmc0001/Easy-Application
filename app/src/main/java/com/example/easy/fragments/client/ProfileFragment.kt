@@ -1,5 +1,6 @@
 package com.example.easy.fragments.client
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,11 +14,13 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
 import com.example.easy.R
+import com.example.easy.activities.LoginRegisterActivity
 import com.example.easy.data.User
 import com.example.easy.databinding.FragmentProfileBinding
 import com.example.easy.utils.Resource
 import com.example.easy.utils.showBottomNav
-import com.example.easy.viewmodels.CustomizeProfileViewModel
+import com.example.easy.viewmodels.LogoutViewModel
+import com.example.easy.viewmodels.ProfileViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -25,13 +28,14 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
     lateinit var binding: FragmentProfileBinding
-    private val profileViewModel by viewModels<CustomizeProfileViewModel>()
+    private val profileViewModel by viewModels<ProfileViewModel>()
+    private val logOutViewModel by viewModels<LogoutViewModel>()
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate(layoutInflater)
         return binding.root
@@ -40,10 +44,24 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-            profileViewModel.getUser()
+            // profileViewModel.getUser()
             btnEdit.setOnClickListener {
                 Navigation.findNavController(view)
                     .navigate(R.id.action_profileFragment_to_customizeProfileFragment)
+            }
+            btnLogout.setOnClickListener {
+
+               // Glide.get(requireContext()).clearMemory()
+              // Glide.get(requireContext()).clearDiskCache()
+
+
+               // logOutViewModel.logout()
+                Intent(requireActivity(), LoginRegisterActivity::class.java).also {
+                    it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(it)
+                    requireActivity().finish()
+                }
+
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
@@ -82,20 +100,25 @@ class ProfileFragment : Fragment() {
             }
         }
 
+
     }
 
     private fun showUserInformation(data: User) {
         binding.apply {
             profileViewModel.getUser()
-            Glide.with(this@ProfileFragment).load(data.imagePath).into(imageUser)
+            Glide.with(this@ProfileFragment).load(data.imagePath).error(R.drawable.ic_profile)
+                .into(imageUser)
             tvFirstName.text = data.firstName
             tvLastName.text = data.lastName
             tvEmail.text = data.email
         }
     }
+
     override fun onResume() {
         super.onResume()
         showBottomNav()
+
+
     }
 
 
