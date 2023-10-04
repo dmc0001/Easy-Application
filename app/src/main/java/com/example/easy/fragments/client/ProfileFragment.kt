@@ -50,19 +50,29 @@ class ProfileFragment : Fragment() {
                     .navigate(R.id.action_profileFragment_to_customizeProfileFragment)
             }
             btnLogout.setOnClickListener {
+                // Clear Glide's memory cache
+                Glide.get(requireContext()).clearMemory()
 
-               // Glide.get(requireContext()).clearMemory()
-              // Glide.get(requireContext()).clearDiskCache()
+                // Clear Glide's disk cache (This may take some time)
+                lifecycleScope.launch {
+                    try {
+                        Glide.get(requireContext()).clearDiskCache()
+                    } catch (e: Exception) {
+                        // Handle any exceptions that may occur during disk cache clearing.
+                        Log.e("GlideDiskCache", "Failed to clear disk cache: ${e.message}")
+                    }
 
-
-               // logOutViewModel.logout()
-                Intent(requireActivity(), LoginRegisterActivity::class.java).also {
-                    it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(it)
-                    requireActivity().finish()
+                    // Logout and navigate to the login/register activity
+                    logOutViewModel.logout()
+                    Intent(requireActivity(), LoginRegisterActivity::class.java).also {
+                        it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(it)
+                        requireActivity().finish()
+                    }
                 }
-
             }
+
+
         }
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -103,16 +113,25 @@ class ProfileFragment : Fragment() {
 
     }
 
-    private fun showUserInformation(data: User) {
+    private fun showUserInformation(data: User?) {
         binding.apply {
-            profileViewModel.getUser()
-            Glide.with(this@ProfileFragment).load(data.imagePath).error(R.drawable.ic_profile)
-                .into(imageUser)
-            tvFirstName.text = data.firstName
-            tvLastName.text = data.lastName
-            tvEmail.text = data.email
+            if (data != null) {
+                Glide.with(this@ProfileFragment).load(data.imagePath).error(R.drawable.ic_profile)
+                    .into(imageUser)
+                tvFirstName.text = data.firstName
+                tvLastName.text = data.lastName
+                tvEmail.text = data.email
+            } else {
+                // Handle the case where user data is null
+                // You can display a default user image or show an error message
+                Glide.with(this@ProfileFragment).load(R.drawable.ic_profile).into(imageUser)
+                tvFirstName.text = "N/A"
+                tvLastName.text = "N/A"
+                tvEmail.text = "N/A"
+            }
         }
     }
+
 
     override fun onResume() {
         super.onResume()
