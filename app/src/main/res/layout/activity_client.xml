@@ -28,7 +28,7 @@
         app:itemPaddingTop="10dp"
         app:labelVisibilityMode="selected"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        app:menu="@menu/bottom_nav_menu_client" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

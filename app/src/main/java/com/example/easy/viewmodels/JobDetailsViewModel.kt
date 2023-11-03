@@ -76,32 +76,32 @@ class JobDetailsViewModel @Inject constructor(
 
 
 
-   fun addOrder(cartOrder: Order) {
-       viewModelScope.launch {
-           _order.value = Resource.Loading()
+    fun addOrder(cartOrder: Order) {
+        viewModelScope.launch {
+            _order.value = Resource.Loading()
 
-           try {
-               val querySnapshot = db.collection(USER_COLLECTION)
-                   .document(auth.uid!!)
-                   .collection(ORDER_COLLECTION)
-                   .whereEqualTo("jobInformationUid", cartOrder.jobInformationUid)
-                   .get()
-                   .await()
+            try {
+                val querySnapshot = db.collection(USER_COLLECTION)
+                    .document(auth.uid!!)
+                    .collection(ORDER_COLLECTION)
+                    .whereEqualTo("jobInformationUid", cartOrder.jobInformationUid)
+                    .get()
+                    .await()
 
-               if (querySnapshot.isEmpty) {
-                   // No existing order, add a new one
-                   addNewOrder(cartOrder)
-               } else {
-                   // Update the existing order
-                   val orderId = querySnapshot.documents[0].id
-                   val updatedMap = update(cartOrder)
-                   updateOrder(orderId, updatedMap)
-               }
-           } catch (e: Exception) {
-               _order.value = Resource.Failed(e.message.toString())
-           }
-       }
-   }
+                if (querySnapshot.isEmpty) {
+                    // No existing order, add a new one
+                    addNewOrder(cartOrder)
+                } else {
+                    // Update the existing order
+                    val orderId = querySnapshot.documents[0].id
+                    val updatedMap = update(cartOrder)
+                    updateOrder(orderId, updatedMap)
+                }
+            } catch (e: Exception) {
+                _order.value = Resource.Failed(e.message.toString())
+            }
+        }
+    }
 
     private fun addNewOrder(cartOrder: Order) {
         firebaseCommon.addOrder(cartOrder) { addedOrder, e ->

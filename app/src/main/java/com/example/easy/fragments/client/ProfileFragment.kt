@@ -44,7 +44,7 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-            // profileViewModel.getUser()
+            profileViewModel.getUser()
             btnEdit.setOnClickListener {
                 Navigation.findNavController(view)
                     .navigate(R.id.action_profileFragment_to_customizeProfileFragment)
@@ -61,6 +61,7 @@ class ProfileFragment : Fragment() {
                         // Handle any exceptions that may occur during disk cache clearing.
                         Log.e("GlideDiskCache", "Failed to clear disk cache: ${e.message}")
                     }
+                  //  Glide.with(this@ProfileFragment).load(R.drawable.ic_profile).into(imageUser)
 
                     // Logout and navigate to the login/register activity
                     logOutViewModel.logout()
@@ -115,20 +116,17 @@ class ProfileFragment : Fragment() {
 
     private fun showUserInformation(data: User?) {
         binding.apply {
-            if (data != null) {
-                Glide.with(this@ProfileFragment).load(data.imagePath).error(R.drawable.ic_profile)
+           // if (data != null) {
+                Glide.with(this@ProfileFragment).load(data?.imagePath).error(R.drawable.ic_profile)
                     .into(imageUser)
-                tvFirstName.text = data.firstName
-                tvLastName.text = data.lastName
-                tvEmail.text = data.email
-            } else {
+                tvFirstName.text = data?.firstName
+                tvLastName.text = data?.lastName
+                tvEmail.text = data?.email
+           // } else {
                 // Handle the case where user data is null
                 // You can display a default user image or show an error message
-                Glide.with(this@ProfileFragment).load(R.drawable.ic_profile).into(imageUser)
-                tvFirstName.text = "N/A"
-                tvLastName.text = "N/A"
-                tvEmail.text = "N/A"
-            }
+
+           // }
         }
     }
 

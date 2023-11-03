@@ -3,11 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/employer_nav_graph"
-    app:startDestination="@id/editProfileFragment">
+    app:startDestination="@id/homeFragment2">
 
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.example.easy.fragments.employer.EditProfileFragment"
         android:label="fragment_edit_profile"
         tools:layout="@layout/fragment_edit_profile" />
+    <fragment
+        android:id="@+id/homeFragment2"
+        android:name="com.example.easy.fragments.employer.HomeFragment"
+        android:label="fragment_home2"
+        tools:layout="@layout/fragment_home2" />
+    <fragment
+        android:id="@+id/orderFragment2"
+        android:name="com.example.easy.fragments.employer.OrderFragment"
+        android:label="fragment_order2"
+        tools:layout="@layout/fragment_order2" />
+    <fragment
+        android:id="@+id/profileFragment2"
+        android:name="com.example.easy.fragments.employer.ProfileFragment"
+        android:label="fragment_profile2"
+        tools:layout="@layout/fragment_profile2" />
 </navigation>
